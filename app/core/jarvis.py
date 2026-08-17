@@ -1,4 +1,8 @@
 from datetime import datetime
+from app.commands.greeting import hello
+from app.commands.utility import time,date,show_help
+from app.commands.system import shutdown
+from app.automation.browser import open_website
 
 class Jarvis:
     def __init__(self):
@@ -17,31 +21,38 @@ class Jarvis:
             command=input("\nJarvis>").strip().lower()
 
             if command == "help":
-                self.show_help()
+                show_help()
 
             elif command=="version":
                 print(f"current version :{self.version}")
 
             elif command=="time":
-                current_time=datetime.now().strftime("%I:%M:%S %p")
-                print(f"current Time: {current_time}")
+                time()
 
             elif command=="date":
-                current_date=datetime.now().strftime("%d-%m-%y")
-                print(f"Today's date: {current_date}")
+                date()
 
             elif command=="hello":
-                print("Hello how can I help you?")
+                hello()
+
+            elif command.startswith("open "):
+                parts = command.split()
+
+                if len(parts) > 1:
+                    url = parts[1]
+                    open_website(url)
+                else:
+                    print("Please provide a website URL.")
 
             elif command=="exit":
-                self.shutdown()
-                return False
+                shutdown()
+            
             
             else:
                 print("Sorry,I don't understand that command.")
                 return True
             
-      
+
       
     def show_help(self):
         print("\nAvailable commands")
