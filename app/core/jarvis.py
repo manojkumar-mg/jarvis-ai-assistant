@@ -2,7 +2,7 @@ from app.commands.greeting import hello
 from app.commands.utility import time, date, show_help
 from app.commands.system import shutdown
 from app.automation.browser import open_website
-
+from app.nlp.intent import detect_intent
 
 class Jarvis:
 
@@ -24,6 +24,8 @@ class Jarvis:
 
     def process_command(self, command):
 
+        intent = detect_intent(command)
+
         if command == "help":
             show_help()
 
@@ -36,7 +38,7 @@ class Jarvis:
         elif command == "date":
             date()
 
-        elif command == "hello":
+        elif intent == "greeting":
             hello()
 
         elif command == "open" or command.startswith("open "):
