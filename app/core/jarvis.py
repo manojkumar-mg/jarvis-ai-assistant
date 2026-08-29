@@ -2,7 +2,7 @@ from app.commands.greeting import hello
 from app.commands.utility import time, date, show_help
 from app.commands.system import shutdown
 from app.automation.browser import open_website
-from app.nlp.intent import detect_intent
+from app.nlp.intent import detect_intent, extract_website, get_website_url
 
 class Jarvis:
 
@@ -32,23 +32,21 @@ class Jarvis:
         elif command == "version":
             print(f"Current version : {self.version}")
 
-        elif command == "time":
+        elif intent == "time":
             time()
 
-        elif command == "date":
+        elif intent == "date":
             date()
 
         elif intent == "greeting":
             hello()
 
-        elif command == "open" or command.startswith("open "):
-            parts = command.split()
+        elif intent == "open_website":
+            website = extract_website(command)
+            url = get_website_url(website)
 
-            if len(parts) > 1:
-                url = parts[1]
-                open_website(url)
-            else:
-                print("Please provide a website URL.")
+            print(f"Opening {website}...")
+            open_website(url)
 
         elif command == "exit":
             shutdown()
@@ -56,5 +54,7 @@ class Jarvis:
 
         else:
             print("Sorry, I don't understand that command.")
+
+        
 
         return True
