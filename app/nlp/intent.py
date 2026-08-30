@@ -19,7 +19,8 @@ def detect_intent(command):
 
     elif "open" in words or "launch" in words or "go to" in command:
         return "open_website"
-
+    elif "exit" in words or "quit" in words or "goodbye" in words:
+        return "exit"
     return "unknown"
 
 
@@ -42,4 +43,5 @@ def extract_website(command):
 
 
 def get_website_url(website):
-    return websites[website]
+    return websites.get(website)
+

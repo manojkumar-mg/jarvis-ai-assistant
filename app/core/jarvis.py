@@ -45,12 +45,17 @@ class Jarvis:
             website = extract_website(command)
             url = get_website_url(website)
 
-            print(f"Opening {website}...")
-            open_website(url)
+            if url:
+                print(f"Opening {website}...")
+                open_website(url)
+            else:
+                print(f"I don't have {website} configured yet.")
 
-        elif command == "exit":
+        elif intent == "exit":
             shutdown()
             return False
+        elif intent == "unknown":
+            print("Sorry, I don't understand that command.")    
 
         else:
             print("Sorry, I don't understand that command.")
