@@ -3,6 +3,8 @@ from app.commands.utility import time, date, show_help
 from app.commands.system import shutdown
 from app.automation.browser import open_website
 from app.nlp.intent import detect_intent, extract_website, get_website_url
+from app.voice.tts import speak
+from app.voice.speech import listen
 
 class Jarvis:
 
@@ -14,10 +16,14 @@ class Jarvis:
         print("=" * 50)
         print(f"Hello, I am {self.name}")
         print(f"Version : {self.version}")
+        speak(f"Hello, I am {self.name}. Version {self.version}.")
         print("=" * 50)
 
         while True:
-            command = input("\nJarvis>").strip().lower()
+            command = listen()
+
+            if not command:
+                continue
 
             if not self.process_command(command):
                 break
@@ -30,36 +36,49 @@ class Jarvis:
             show_help()
 
         elif command == "version":
-            print(f"Current version : {self.version}")
+            response = f"Current version : {self.version}"
+            print(response)
+            speak(response)
 
         elif intent == "time":
-            time()
+            response = time()
+            print(response)
+            speak(response)
 
         elif intent == "date":
-            date()
+            response = date()
+            print(response)
+            speak(response)
 
         elif intent == "greeting":
-            hello()
+            response = hello()
+            print(response)
+            speak(response)
 
         elif intent == "open_website":
             website = extract_website(command)
             url = get_website_url(website)
 
             if url:
-                print(f"Opening {website}...")
+                response = f"Opening {website}..."
+                print(response)
+                speak(response)
                 open_website(url)
+
             else:
-                print(f"I don't have {website} configured yet.")
+                response = f"I don't have {website} configured yet."
+                print(response)
+                speak(response)
 
         elif intent == "exit":
-            shutdown()
+            response = shutdown()
+            print(response)
+            speak(response)
             return False
-        elif intent == "unknown":
-            print("Sorry, I don't understand that command.")    
 
         else:
-            print("Sorry, I don't understand that command.")
-
-        
+            response = "Sorry, I don't understand that command."
+            print(response)
+            speak(response)
 
         return True

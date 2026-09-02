@@ -1,2 +1,2 @@
 def shutdown():
-    print("Goodbye : shutting down JARVIS.....")
+    return "Goodbye : shutting down JARVIS....."

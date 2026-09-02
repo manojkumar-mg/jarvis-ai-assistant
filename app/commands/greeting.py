@@ -1,2 +1,2 @@
 def hello():
-    print("Hello! how can I help you?")
+    return "Hello! How can I help you?"

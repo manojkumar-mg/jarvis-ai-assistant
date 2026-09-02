@@ -28,7 +28,6 @@ def listen(duration=5, sample_rate=16000):
         return text.lower()
 
     except sr.UnknownValueError:
-        print("Sorry, I didn't understand.")
         return ""
 
     except sr.RequestError:
