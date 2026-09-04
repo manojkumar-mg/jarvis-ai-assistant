@@ -4,23 +4,59 @@ websites = {
     "github": "https://github.com"
 }
 
+intent_phrases = {
+    "greeting": [
+        "hello",
+        "hi",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening"
+    ],
+
+    "time": [
+        "time",
+        "current hour",
+        "what time is it",
+        "tell me the time"
+    ],
+
+    "date": [
+        "date",
+        "today's date",
+        "current date",
+        "what date is it"
+    ]
+}
+
+intent_priority = [
+    "open_website",
+    "time",
+    "date",
+    "exit",
+    "greeting"
+]
+
 
 def detect_intent(command):
     words = command.split()
 
-    if "hello" in words or "hi" in words or "hey" in words:
-        return "greeting"
+    matched_intents = []
 
-    elif "time" in words:
-        return "time"
+    for intent, phrases in intent_phrases.items():
+        if any(phrase in command for phrase in phrases):
+            matched_intents.append(intent)
 
-    elif "date" in words:
-        return "date"
+    if "open" in words or "launch" in words or "go to" in command:
+        matched_intents.append("open_website")
 
-    elif "open" in words or "launch" in words or "go to" in command:
-        return "open_website"
-    elif "exit" in words or "quit" in words or "goodbye" in words:
-        return "exit"
+    if "exit" in words or "quit" in words or "goodbye" in words:
+        matched_intents.append("exit")
+
+    for intent in intent_priority:
+        if intent in matched_intents:
+            return intent
+
     return "unknown"
 
 
