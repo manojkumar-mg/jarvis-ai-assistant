@@ -62,20 +62,12 @@ def detect_intent(command):
 
 def extract_website(command):
     words = command.split()
+    
+    for website, url in websites.items():
+        if website in words:
+            return website
 
-    if "open" in words:
-        index = words.index("open")
-        website = words[index + 1]
-
-    elif "launch" in words:
-        index = words.index("launch")
-        website = words[index + 1]
-
-    elif "go to" in command:
-        index = words.index("go")
-        website = words[index + 2]
-
-    return website
+    return None
 
 
 def get_website_url(website):
