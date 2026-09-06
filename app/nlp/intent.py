@@ -1,8 +1,12 @@
+import string
+
+
 websites = {
     "google": "https://www.google.com",
     "youtube": "https://www.youtube.com",
     "github": "https://github.com"
 }
+
 
 intent_phrases = {
     "greeting": [
@@ -29,6 +33,7 @@ intent_phrases = {
     ]
 }
 
+
 intent_priority = [
     "open_website",
     "time",
@@ -38,7 +43,17 @@ intent_priority = [
 ]
 
 
+def normalize_command(command):
+    for punctuation in string.punctuation:
+        command = command.replace(punctuation, "")
+
+    command = command.lower()
+
+    return command
+
+
 def detect_intent(command):
+    command = normalize_command(command)
     words = command.split()
 
     matched_intents = []
@@ -61,15 +76,27 @@ def detect_intent(command):
 
 
 def extract_website(command):
+    command = normalize_command(command)
     words = command.split()
-    
-    for website, url in websites.items():
-        if website in words:
-            return website
+
+    filler_words = ["the", "website", "site"]
+
+    if "open" in words:
+        index = words.index("open")
+
+        for word in words[index + 1:]:
+            if word not in filler_words:
+                return word
+
+    elif "launch" in words:
+        index = words.index("launch")
+
+        for word in words[index + 1:]:
+            if word not in filler_words:
+                return word
 
     return None
 
 
 def get_website_url(website):
     return websites.get(website)
-

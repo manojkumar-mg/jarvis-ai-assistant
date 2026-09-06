@@ -25,10 +25,11 @@ print(get_website_url("google"))
 
 print(extract_website("hey jarvis, please open youtube for me"))
 
-print(extract_website("please open google"))
-print(extract_website("hey jarvis, launch youtube"))
-print(extract_website("jarvis, go to github"))
 
-print(extract_website("please open google"))
-print(extract_website("hey jarvis, launch youtube"))
-print(extract_website("jarvis, go to github"))
+print(extract_website("HEY JARVIS, OPEN YOUTUBE!"))
+print(extract_website("Open Google, please!"))
+print(extract_website("LAUNCH GITHUB!!!"))
+
+
+
+
