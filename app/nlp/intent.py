@@ -99,4 +99,7 @@ def extract_website(command):
 
 
 def get_website_url(website):
-    return websites.get(website)
+    if website in websites:
+        return websites[website]
+
+    return f"https://www.{website}.com"
