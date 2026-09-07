@@ -45,7 +45,7 @@ intent_priority = [
 
 def normalize_command(command):
     for punctuation in string.punctuation:
-        command = command.replace(punctuation, "")
+        command = command.replace(punctuation, " ")
 
     command = command.lower()
 
@@ -76,6 +76,16 @@ def detect_intent(command):
 
 
 def extract_website(command):
+    command_lower = command.lower()
+
+    if "https://" in command_lower:
+        start = command_lower.index("https://")
+        return command[start:].split()[0]
+
+    if "http://" in command_lower:
+        start = command_lower.index("http://")
+        return command[start:].split()[0]
+
     command = normalize_command(command)
     words = command.split()
 
@@ -95,8 +105,13 @@ def extract_website(command):
             if word not in filler_words:
                 return word
 
-    return None
+    elif "go" in words and "to" in words:
+        index = words.index("go")
 
+        if index + 2 < len(words):
+            return words[index + 2]
+
+    return None
 
 def get_website_url(website):
     if website in websites:

@@ -30,6 +30,9 @@ print(extract_website("HEY JARVIS, OPEN YOUTUBE!"))
 print(extract_website("Open Google, please!"))
 print(extract_website("LAUNCH GITHUB!!!"))
 
-
+print(extract_website("open the website youtube"))
+print(extract_website("open reddit"))
+print(extract_website("open https://www.reddit.com"))
+print(extract_website("go to youtube"))
 
 
