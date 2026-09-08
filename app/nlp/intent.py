@@ -30,6 +30,9 @@ intent_phrases = {
         "today's date",
         "current date",
         "what date is it"
+    ],
+    "help": [
+        "help"
     ]
 }
 
@@ -38,6 +41,7 @@ intent_priority = [
     "open_website",
     "time",
     "date",
+    "help",
     "exit",
     "greeting"
 ]

@@ -5,7 +5,7 @@ from app.automation.browser import open_website
 from app.nlp.intent import detect_intent, extract_website, get_website_url
 from app.voice.tts import speak
 from app.voice.speech import listen
-
+from app.core.router import route_command
 class Jarvis:
 
     def __init__(self):
@@ -32,26 +32,16 @@ class Jarvis:
 
         intent = detect_intent(command)
 
-        if command == "help":
-            show_help()
+        if intent == "help":
+            route_command(intent)
 
         elif command == "version":
             response = f"Current version : {self.version}"
             print(response)
             speak(response)
 
-        elif intent == "time":
-            response = time()
-            print(response)
-            speak(response)
-
-        elif intent == "date":
-            response = date()
-            print(response)
-            speak(response)
-
-        elif intent == "greeting":
-            response = hello()
+        elif intent in ["time", "date", "greeting"]:
+            response = route_command(intent)
             print(response)
             speak(response)
 
