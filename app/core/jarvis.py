@@ -53,7 +53,7 @@ class Jarvis:
                 response = f"Opening {website}..."
                 print(response)
                 speak(response)
-                open_website(url)
+                route_command(intent, url)
 
             else:
                 response = f"I don't have {website} configured yet."

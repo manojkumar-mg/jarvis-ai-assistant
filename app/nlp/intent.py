@@ -118,6 +118,9 @@ def extract_website(command):
     return None
 
 def get_website_url(website):
+    if website.startswith("http://") or website.startswith("https://"):
+        return website
+
     if website in websites:
         return websites[website]
 
