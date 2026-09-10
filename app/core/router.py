@@ -2,6 +2,7 @@ from app.commands.utility import time, date, show_help
 from app.commands.greeting import hello
 from app.automation.browser import open_website
 
+
 commands = {
     "time": time,
     "date": date,
@@ -10,13 +11,11 @@ commands = {
     "open_website": open_website
 }
 
-def route_command(intent, data=None):
+
+def route_command(intent, *args):
     handler = commands.get(intent)
 
-    if handler:
-        if data:
-            return handler(data)
-        else:
-            return handler()
+    if not handler:
+        return None
 
-    return None
+    return handler(*args)

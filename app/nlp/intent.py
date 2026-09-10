@@ -4,7 +4,13 @@ import string
 websites = {
     "google": "https://www.google.com",
     "youtube": "https://www.youtube.com",
-    "github": "https://github.com"
+    "github": "https://github.com",
+    "reddit": "https://www.reddit.com",
+    "instagram": "https://www.instagram.com",
+    "facebook": "https://www.facebook.com",
+    "linkedin": "https://www.linkedin.com",
+    "whatsapp": "https://web.whatsapp.com",
+    "amazon": "https://www.amazon.in"
 }
 
 
@@ -33,6 +39,12 @@ intent_phrases = {
     ],
     "help": [
         "help"
+    ],
+    "version": [
+        "version",
+        "what version are you",
+        "which version are you",
+        "tell me your version"
     ]
 }
 
@@ -42,6 +54,7 @@ intent_priority = [
     "time",
     "date",
     "help",
+    "version",
     "exit",
     "greeting"
 ]
@@ -80,15 +93,15 @@ def detect_intent(command):
 
 
 def extract_website(command):
-    command_lower = command.lower()
+    command_lower = command.lower().strip()
 
     if "https://" in command_lower:
         start = command_lower.index("https://")
-        return command[start:].split()[0]
+        return command[start:].split()[0].rstrip(".,!?")
 
     if "http://" in command_lower:
         start = command_lower.index("http://")
-        return command[start:].split()[0]
+        return command[start:].split()[0].rstrip(".,!?")
 
     command = normalize_command(command)
     words = command.split()
@@ -102,14 +115,14 @@ def extract_website(command):
             if word not in filler_words:
                 return word
 
-    elif "launch" in words:
+    if "launch" in words:
         index = words.index("launch")
 
         for word in words[index + 1:]:
             if word not in filler_words:
                 return word
 
-    elif "go" in words and "to" in words:
+    if "go" in words and "to" in words:
         index = words.index("go")
 
         if index + 2 < len(words):
@@ -118,10 +131,16 @@ def extract_website(command):
     return None
 
 def get_website_url(website):
+    if not website:
+        return None
+
     if website.startswith("http://") or website.startswith("https://"):
         return website
 
     if website in websites:
         return websites[website]
+
+    if "." in website:
+        return f"https://{website}"
 
     return f"https://www.{website}.com"
