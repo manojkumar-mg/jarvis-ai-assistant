@@ -1,2 +1,8 @@
+from app.core.result import CommandResult
+
+
 def shutdown():
-    return "Goodbye : shutting down JARVIS....."
+    return CommandResult(
+        True,
+        "Goodbye. Shutting down JARVIS..."
+    )

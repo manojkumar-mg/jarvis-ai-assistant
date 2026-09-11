@@ -1,2 +1,8 @@
+from app.core.result import CommandResult
+
+
 def hello():
-    return "Hello! How can I help you?"
+    return CommandResult(
+        True,
+        "Hello! How can I help you?"
+    )

@@ -3,13 +3,13 @@ from app.nlp.intent import detect_intent, extract_website, get_website_url
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
-
+from app.core.result import CommandResult
 
 class Jarvis:
 
     def __init__(self):
         self.name = "JARVIS"
-        self.version = "0.3.0"
+        self.version = "0.4.0"
 
     def start(self):
         print("=" * 50)
@@ -31,46 +31,42 @@ class Jarvis:
 
             if not self.process_command(command):
                 break
+   
 
     def process_command(self, command):
 
         intent = detect_intent(command)
 
-        if intent == "help":
-            route_command(intent)
+        if intent in ["help", "time", "date", "greeting"]:
+            result = route_command(intent)
+            self.respond(result)
 
         elif intent == "version":
-            response = f"Current version : {self.version}"
-            print(response)
-            speak(response)
+            result = CommandResult(
+            True,
+            f"Current version: {self.version}"
+            )
 
-        elif intent in ["time", "date", "greeting"]:
-            response = route_command(intent)
-
-            if response:
-                print(response)
-                speak(response)
+            self.respond(result)
 
         elif intent == "open_website":
             website = extract_website(command)
             url = get_website_url(website)
 
             if url:
-                response = f"Opening {website}..."
-                print(response)
-                speak(response)
-
-                route_command(intent, url)
+                result = route_command(intent, url)
+                self.respond(result)
 
             else:
-                response = "I could not identify the website."
-                print(response)
-                speak(response)
+                result = CommandResult(
+                False,
+                "I could not identify the website."
+                )
+                self.respond(result)
 
         elif intent == "exit":
-            response = shutdown()
-            print(response)
-            speak(response)
+            result = shutdown()
+            self.respond(result)
             return False
 
         else:
@@ -79,3 +75,14 @@ class Jarvis:
             speak(response)
 
         return True
+    def respond(self, result):
+    
+            if not result:
+                return
+    
+            if hasattr(result, "message"):
+                print(result.message)
+                speak(result.message)
+            else:
+                print(result)
+                speak(str(result))

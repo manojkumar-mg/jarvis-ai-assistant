@@ -12,10 +12,10 @@ commands = {
 }
 
 
-def route_command(intent, *args):
+def route_command(intent, *args, **kwargs):
     handler = commands.get(intent)
 
     if not handler:
         return None
 
-    return handler(*args)
+    return handler(*args, **kwargs)
