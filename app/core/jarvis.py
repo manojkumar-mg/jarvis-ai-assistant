@@ -80,7 +80,7 @@ class Jarvis:
             if not result:
                 return
     
-            if hasattr(result, "message"):
+            if isinstance(result, CommandResult):
                 print(result.message)
                 speak(result.message)
             else:

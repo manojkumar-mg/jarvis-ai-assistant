@@ -68,6 +68,17 @@ def normalize_command(command):
 
     return command
 
+def phrase_matches(command, phrase):
+    command_words = command.split()
+    phrase_words = phrase.split()
+
+    phrase_length = len(phrase_words)
+
+    for i in range(len(command_words) - phrase_length + 1):
+        if command_words[i:i + phrase_length] == phrase_words:
+            return True
+
+    return False
 
 def detect_intent(command):
     command = normalize_command(command)
@@ -76,7 +87,7 @@ def detect_intent(command):
     matched_intents = []
 
     for intent, phrases in intent_phrases.items():
-        if any(phrase in command for phrase in phrases):
+        if any(phrase_matches(command, phrase) for phrase in phrases):
             matched_intents.append(intent)
 
     if "open" in words or "launch" in words or "go to" in command:
@@ -106,27 +117,35 @@ def extract_website(command):
     command = normalize_command(command)
     words = command.split()
 
-    filler_words = ["the", "website", "site"]
+    filler_words = [
+        "the",
+        "website",
+        "site",
+        "please",
+        "can",
+        "you",
+        "could",
+        "would"
+    ]
 
     if "open" in words:
         index = words.index("open")
+        words = words[index + 1:]
 
-        for word in words[index + 1:]:
-            if word not in filler_words:
-                return word
-
-    if "launch" in words:
+    elif "launch" in words:
         index = words.index("launch")
+        words = words[index + 1:]
 
-        for word in words[index + 1:]:
-            if word not in filler_words:
-                return word
+    elif "go" in words and "to" in words:
+        index = words.index("to")
+        words = words[index + 1:]
 
-    if "go" in words and "to" in words:
-        index = words.index("go")
+    else:
+        return None
 
-        if index + 2 < len(words):
-            return words[index + 2]
+    for word in words:
+        if word not in filler_words:
+            return word
 
     return None
 
