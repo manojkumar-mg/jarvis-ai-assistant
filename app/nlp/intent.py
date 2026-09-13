@@ -45,6 +45,25 @@ intent_phrases = {
         "what version are you",
         "which version are you",
         "tell me your version"
+    ],
+    "last_command": [
+        "last command",
+        "what was my last command",
+        "what did I just say",
+        "what did I say last"
+    ],
+    "last_intent": [
+        "last intent",
+        "what was my last intent",
+        "what intent did you detect",
+        "what was the previous intent"
+    ],
+    "history": [
+        "history",
+        "show my history",
+        "show command history",
+        "show my command history",
+        "what commands did I use"
     ]
 }
 
@@ -55,6 +74,9 @@ intent_priority = [
     "date",
     "help",
     "version",
+    "last_command",
+    "last_intent",
+    "history",
     "exit",
     "greeting"
 ]
@@ -69,6 +91,9 @@ def normalize_command(command):
     return command
 
 def phrase_matches(command, phrase):
+    command = normalize_command(command)
+    phrase = normalize_command(phrase)
+
     command_words = command.split()
     phrase_words = phrase.split()
 
