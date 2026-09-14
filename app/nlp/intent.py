@@ -64,6 +64,11 @@ intent_phrases = {
         "show command history",
         "show my command history",
         "what commands did I use"
+    ],
+    "search_memory": [
+        "search memory",
+        "find in memory",
+        "search my memory"
     ]
 }
 
@@ -77,6 +82,7 @@ intent_priority = [
     "last_command",
     "last_intent",
     "history",
+    "search_memory",
     "exit",
     "greeting"
 ]
@@ -188,3 +194,18 @@ def get_website_url(website):
         return f"https://{website}"
 
     return f"https://www.{website}.com"
+
+def extract_memory_keyword(command):
+    command = normalize_command(command)
+    words = command.split()
+
+    keywords = [
+        "search",
+        "memory",
+        "find",
+        "in"
+    ]
+
+    words = [word for word in words if word not in keywords]
+
+    return " ".join(words).strip()

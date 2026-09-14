@@ -1,9 +1,11 @@
 from app.core.router import route_command
-from app.nlp.intent import detect_intent, extract_website, get_website_url
+from app.nlp.intent import detect_intent, extract_website, get_website_url, extract_memory_keyword
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
 from app.core.result import CommandResult
+from app.memory.memory import Memory
+
 
 class Jarvis:
 
@@ -13,8 +15,11 @@ class Jarvis:
 
         self.last_command = None
         self.last_intent = None
-        self.command_history = []
+        
+        self.memory = Memory()
+        self.memory.load()
 
+        self.command_history = self.memory.data.copy()
 
     def start(self):
         print("=" * 50)
@@ -84,6 +89,33 @@ class Jarvis:
 
             self.respond(result)
 
+        elif intent == "search_memory":
+            keyword = extract_memory_keyword(command)
+            results = self.memory.search(keyword)
+
+            if results:
+                history_text = "Memory Search Results:\n"
+
+                for index, item in enumerate(results, start=1):
+                    history_text += (
+                        f"{index}. {item['command']} "
+                        f"| Intent: {item['intent']} "
+                        f"| Status: {'Success' if item['success'] else 'Failed'}\n"
+                        )
+
+                result = CommandResult(
+                    True,
+                    history_text,
+                    results
+                )
+            else:
+                result = CommandResult(
+                False,
+                f"I couldn't find anything related to {keyword}."
+                )
+
+            self.respond(result)
+
         elif intent == "history":
             if self.command_history:
                 history_text = "Command History:\n"
@@ -140,6 +172,13 @@ class Jarvis:
         self.last_intent = intent
 
         self.command_history.append({
+            "command": command,
+            "intent": intent,
+            "success": result.success if result else False,
+            "response": result.message if result else ""
+        })
+
+        self.memory.add({
             "command": command,
             "intent": intent,
             "success": result.success if result else False,
