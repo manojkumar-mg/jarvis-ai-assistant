@@ -6,6 +6,13 @@ from app.commands.system import shutdown
 from app.core.result import CommandResult
 from app.memory.memory import Memory
 
+meta_intents = [
+    "last_command",
+    "last_intent",
+    "context",
+    "history",
+    "search_memory"
+]
 
 class Jarvis:
 
@@ -13,13 +20,19 @@ class Jarvis:
         self.name = "JARVIS"
         self.version = "0.4.0"
 
-        self.last_command = None
-        self.last_intent = None
-        
         self.memory = Memory()
         self.memory.load()
 
         self.command_history = self.memory.data.copy()
+
+        self.last_command = None
+        self.last_intent = None
+
+        if self.command_history:
+            last_memory = self.command_history[-1]
+
+            self.last_command = last_memory["command"]
+            self.last_intent = last_memory["intent"]
 
     def start(self):
         print("=" * 50)
@@ -116,6 +129,57 @@ class Jarvis:
 
             self.respond(result)
 
+        elif intent == "context":
+
+            if self.command_history:
+
+                last_real = None
+
+                for item in reversed(self.command_history):
+
+                    if item["intent"] not in [
+                        "context",
+                        "last_command",
+                        "last_intent",
+                        "history"
+                        ]:  
+                        last_real = item
+                        break
+
+                if last_real["intent"] == "open_website":
+                    url = last_real.get("data", {}).get("url")
+
+                    if url:
+                        website = url.replace("https://www.", "")
+                        website = website.replace("https://", "")
+                        website = website.replace("http://www.", "")
+                        website = website.replace("http://", "")
+                        website = website.split(".")[0]
+
+                        result = CommandResult(
+                        True,   
+                        f"You opened {website.capitalize()}."
+                        )
+                    else:
+                        result = CommandResult(
+                        True,
+                        f"You recently executed: {last_real['command']}"
+                        )
+                else:
+                    result = CommandResult(
+                    True,
+                    f"You recently executed: {last_real['command']}"
+                )
+               
+
+            else:
+                result = CommandResult(
+                False,
+                "I don't have any history yet."
+            )
+
+            self.respond(result)
+
         elif intent == "history":
             if self.command_history:
                 history_text = "Command History:\n"
@@ -167,22 +231,25 @@ class Jarvis:
             "Sorry, I don't understand that command."
             )
             self.respond(result)
+        if intent not in meta_intents:
 
-        self.last_command = command
-        self.last_intent = intent
+            self.last_command = command 
+            self.last_intent = intent
 
         self.command_history.append({
             "command": command,
             "intent": intent,
             "success": result.success if result else False,
-            "response": result.message if result else ""
+            "response": result.message if result else "",
+            "data": result.data if result else None
         })
 
         self.memory.add({
             "command": command,
             "intent": intent,
             "success": result.success if result else False,
-            "response": result.message if result else ""
+            "response": result.message if result else "",
+            "data": result.data if result else None
         })
         return True
     def respond(self, result):

@@ -69,7 +69,15 @@ intent_phrases = {
         "search memory",
         "find in memory",
         "search my memory"
+    ],
+    "context": [
+        "what did I just do",
+        "what did I just open",
+        "what was I doing",
+        "what happened",
+        "what did you just do"
     ]
+
 }
 
 
@@ -81,6 +89,7 @@ intent_priority = [
     "version",
     "last_command",
     "last_intent",
+    "context",
     "history",
     "search_memory",
     "exit",
@@ -121,7 +130,16 @@ def detect_intent(command):
         if any(phrase_matches(command, phrase) for phrase in phrases):
             matched_intents.append(intent)
 
-    if "open" in words or "launch" in words or "go to" in command:
+    if (
+            "open" in words
+            and not any(
+            phrase_matches(command, phrase)
+            for phrase in intent_phrases.get("context", [])
+        )
+        ):
+        matched_intents.append("open_website")
+
+    if "launch" in words or "go to" in command:
         matched_intents.append("open_website")
 
     if "exit" in words or "quit" in words or "goodbye" in words:
