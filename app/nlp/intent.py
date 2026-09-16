@@ -70,6 +70,14 @@ intent_phrases = {
         "find in memory",
         "search my memory"
     ],
+    "reference": [
+        "is it still open",
+        "is it open",
+        "is that still open",
+        "what about it",
+        "what about that",
+        "the website"
+    ],
     "context": [
         "what did I just do",
         "what did I just open",
@@ -89,6 +97,7 @@ intent_priority = [
     "version",
     "last_command",
     "last_intent",
+    "reference",
     "context",
     "history",
     "search_memory",
@@ -131,12 +140,15 @@ def detect_intent(command):
             matched_intents.append(intent)
 
     if (
-            "open" in words
-            and not any(
+        "open" in words
+        and not any(
             phrase_matches(command, phrase)
-            for phrase in intent_phrases.get("context", [])
+            for phrase in (
+                intent_phrases.get("context", [])
+                + intent_phrases.get("reference", [])
+            )
         )
-        ):
+    ):
         matched_intents.append("open_website")
 
     if "launch" in words or "go to" in command:

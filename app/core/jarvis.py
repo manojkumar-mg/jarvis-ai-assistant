@@ -11,7 +11,8 @@ meta_intents = [
     "last_intent",
     "context",
     "history",
-    "search_memory"
+    "search_memory",
+    "reference"
 ]
 
 class Jarvis:
@@ -28,11 +29,28 @@ class Jarvis:
         self.last_command = None
         self.last_intent = None
 
-        if self.command_history:
-            last_memory = self.command_history[-1]
+        self.context = {
+            "last_action": None,
+            "last_website": None
+        }
 
-            self.last_command = last_memory["command"]
-            self.last_intent = last_memory["intent"]
+        if self.command_history:
+            for item in reversed(self.command_history):
+
+                if item["intent"] in meta_intents:
+                    continue
+
+                self.last_command = item["command"]
+                self.last_intent = item["intent"]
+                self.context["last_action"] = item["command"]
+
+                if item["intent"] == "open_website":
+                    data = item.get("data")
+
+                    if data:
+                        self.context["last_website"] = data.get("url")
+
+                break
 
     def start(self):
         print("=" * 50)
@@ -131,54 +149,69 @@ class Jarvis:
 
         elif intent == "context":
 
-            if self.command_history:
+            if self.context["last_action"]:
 
-                last_real = None
+                if self.context["last_website"]:
+                    website = self.context["last_website"]
 
-                for item in reversed(self.command_history):
+                    website = website.replace("https://www.", "")
+                    website = website.replace("https://", "")
+                    website = website.replace("http://www.", "")
+                    website = website.replace("http://", "")
+                    website = website.split(".")[0]
 
-                    if item["intent"] not in [
-                        "context",
-                        "last_command",
-                        "last_intent",
-                        "history"
-                        ]:  
-                        last_real = item
-                        break
+                    result = CommandResult(
+                    True,
+                    f"You opened {website.capitalize()}."
+                    )
 
-                if last_real["intent"] == "open_website":
-                    url = last_real.get("data", {}).get("url")
-
-                    if url:
-                        website = url.replace("https://www.", "")
-                        website = website.replace("https://", "")
-                        website = website.replace("http://www.", "")
-                        website = website.replace("http://", "")
-                        website = website.split(".")[0]
-
-                        result = CommandResult(
-                        True,   
-                        f"You opened {website.capitalize()}."
-                        )
-                    else:
-                        result = CommandResult(
-                        True,
-                        f"You recently executed: {last_real['command']}"
-                        )
                 else:
                     result = CommandResult(
                     True,
-                    f"You recently executed: {last_real['command']}"
+                    f"You recently executed: {self.context['last_action']}"
                 )
-               
 
             else:
                 result = CommandResult(
                 False,
-                "I don't have any history yet."
+                "I don't have any recent action in my context."
             )
 
             self.respond(result)
+
+        elif intent == "reference":
+
+            if self.context["last_website"]:
+
+                website = self.context["last_website"]
+
+                website = website.replace("https://www.", "")
+                website = website.replace("https://", "")
+                website = website.replace("http://www.", "")
+                website = website.replace("http://", "")
+                website = website.split(".")[0]
+
+                result = CommandResult(
+                True,
+                f"You're referring to {website.capitalize()}."
+                )
+
+            elif self.context["last_action"]:
+
+                result = CommandResult(
+                True,
+                f"You're referring to your last action: {self.context['last_action']}"
+                )
+
+            else:
+
+                result = CommandResult(
+                False,
+                "I don't have enough context to know what you're referring to."
+                )
+
+            self.respond(result)            
+
 
         elif intent == "history":
             if self.command_history:
@@ -231,10 +264,16 @@ class Jarvis:
             "Sorry, I don't understand that command."
             )
             self.respond(result)
-        if intent not in meta_intents:
 
-            self.last_command = command 
+
+        if intent not in meta_intents:
+            self.last_command = command
             self.last_intent = intent
+            self.context["last_action"] = command
+
+            if intent == "open_website":
+                self.context["last_website"] = result.data.get("url") if result.data else None
+
 
         self.command_history.append({
             "command": command,
