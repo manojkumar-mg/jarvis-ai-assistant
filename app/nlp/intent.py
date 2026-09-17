@@ -78,6 +78,13 @@ intent_phrases = {
         "what about that",
         "the website"
     ],
+    "open_last_website": [
+        "go there",
+        "open it",
+        "open that",
+        "take me there",
+        "go to it"
+    ],
     "context": [
         "what did I just do",
         "what did I just open",
@@ -91,6 +98,7 @@ intent_phrases = {
 
 intent_priority = [
     "open_website",
+    "open_last_website",
     "time",
     "date",
     "help",
@@ -104,7 +112,6 @@ intent_priority = [
     "exit",
     "greeting"
 ]
-
 
 def normalize_command(command):
     for punctuation in string.punctuation:
@@ -146,6 +153,7 @@ def detect_intent(command):
             for phrase in (
                 intent_phrases.get("context", [])
                 + intent_phrases.get("reference", [])
+                + intent_phrases.get("open_last_website", [])
             )
         )
     ):

@@ -238,6 +238,21 @@ class Jarvis:
 
             self.respond(result)
 
+
+        elif intent == "open_last_website":
+
+            website_url = self.context["last_website"]
+
+            if website_url:
+                result = route_command("open_website", website_url)
+                self.respond(result)
+            else:
+                result = CommandResult(
+                    False,
+                    "I don't have a recently opened website."
+                )
+                self.respond(result)
+                
         elif intent == "open_website":
             website = extract_website(command)
             url = get_website_url(website)
