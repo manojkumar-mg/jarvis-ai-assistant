@@ -83,14 +83,22 @@ intent_phrases = {
         "open it",
         "open that",
         "take me there",
-        "go to it"
+        "go to it",
+        "take me back there",
+        "open that site again",
+        "go back there",
+        "return to that website"
     ],
     "context": [
         "what did I just do",
         "what did I just open",
         "what was I doing",
         "what happened",
-        "what did you just do"
+        "what did you just do",
+        "what website did I open",
+        "which site did I visit",
+        "tell me what I opened",
+        "what site did I open"
     ]
 
 }

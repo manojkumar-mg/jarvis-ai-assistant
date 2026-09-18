@@ -58,3 +58,30 @@ print(get_website_url("youtube"))
 print(get_website_url("reddit.com"))
 print(get_website_url("https://www.reddit.com"))
 print(get_website_url("http://example.com"))
+
+
+print("\n--- Context Variation Tests ---")
+
+context_tests = [
+    "what website did I open",
+    "which site did I visit",
+    "tell me what I opened"
+]
+
+for command in context_tests:
+    print(command, "->", detect_intent(command))
+
+
+print("\n--- Previous Website Tests ---")
+
+website_context_tests = [
+    "go there",
+    "open it",
+    "take me back there",
+    "open that site again",
+    "go back there",
+    "return to that website"
+]
+
+for command in website_context_tests:
+    print(command, "->", detect_intent(command))
