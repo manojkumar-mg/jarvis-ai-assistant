@@ -1,30 +1,68 @@
 import sounddevice as sd
 import speech_recognition as sr
+import numpy as np
 
 
-def listen(duration=5, sample_rate=16000):
+def listen(
+    sample_rate=16000,
+    device=1,
+    silence_limit=1.2,
+    max_duration=8
+):
     print("Listening...")
 
-    audio = sd.rec(
-        int(duration * sample_rate),
+    recognizer = sr.Recognizer()
+    audio_chunks = []
+    silence_time = 0
+    started_speaking = False
+
+    chunk_duration = 0.1
+    chunk_size = int(sample_rate * chunk_duration)
+
+    with sd.InputStream(
         samplerate=sample_rate,
         channels=1,
         dtype="int16",
-        device=1
-    )
+        device=device,
+        blocksize=chunk_size
+    ) as stream:
 
-    sd.wait()
+        elapsed = 0
 
-    audio_data = sr.AudioData(
-        audio.tobytes(),
+        while elapsed < max_duration:
+            audio, overflowed = stream.read(chunk_size)
+
+            audio = audio.flatten()
+            audio_chunks.append(audio.copy())
+
+            volume = np.sqrt(np.mean(audio.astype(np.float32) ** 2))
+
+            if volume > 400:
+                started_speaking = True
+                silence_time = 0
+            elif started_speaking:
+                silence_time += chunk_duration
+
+            elapsed += chunk_duration
+
+            if started_speaking and silence_time >= silence_limit:
+                break
+
+    if not started_speaking:
+        return ""
+
+    audio_data = np.concatenate(audio_chunks)
+
+    recognition_audio = sr.AudioData(
+        audio_data.tobytes(),
         sample_rate,
         2
     )
 
-    recognizer = sr.Recognizer()
+    print("Processing...")
 
     try:
-        text = recognizer.recognize_google(audio_data)
+        text = recognizer.recognize_google(recognition_audio)
         return text.lower()
 
     except sr.UnknownValueError:

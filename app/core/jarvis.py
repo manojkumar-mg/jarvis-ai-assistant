@@ -1,5 +1,5 @@
 from app.core.router import route_command
-from app.nlp.intent import detect_intent, extract_website, get_website_url, extract_memory_keyword
+from app.nlp.intent import detect_intent, extract_website, get_website_url, extract_memory_keyword,split_commands
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
@@ -67,11 +67,14 @@ class Jarvis:
         while True:
             command = listen()
 
-            if not command:
-                continue
+            if command:
+                commands = split_commands(command)
 
-            if not self.process_command(command):
-                break
+                for individual_command in commands:
+                    self.process_command(individual_command)
+
+                    if detect_intent(individual_command) == "exit":
+                        return      
    
 
     def process_command(self, command):

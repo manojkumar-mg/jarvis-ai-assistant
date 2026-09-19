@@ -255,3 +255,31 @@ def extract_memory_keyword(command):
     words = [word for word in words if word not in keywords]
 
     return " ".join(words).strip()
+
+
+def split_commands(command):
+    """
+    Splits a multi-command sentence into individual commands.
+    """
+
+    command = command.strip()
+
+    separators = [
+        " and then ",
+        " then ",
+        " and "
+    ]
+
+    for separator in separators:
+        if separator in command.lower():
+            parts = command.lower().split(separator)
+
+            commands = [
+                part.strip()
+                for part in parts
+                if part.strip()
+            ]
+
+            return commands
+
+    return [command]
