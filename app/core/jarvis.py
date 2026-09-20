@@ -241,6 +241,32 @@ class Jarvis:
 
             self.respond(result)
 
+        elif intent == "last_website":
+
+            website_url = self.context["last_website"]
+
+            if website_url:
+
+                website = website_url.replace("https://www.", "")
+                website = website.replace("https://", "")
+                website = website.replace("http://www.", "")
+                website = website.replace("http://", "")
+                website = website.split(".")[0]
+
+                result = CommandResult(
+                    True,
+                    f"The last website you opened was {website.capitalize()}."
+                )
+
+            else:
+
+                result = CommandResult(
+                    False,
+                    "I don't have a recently opened website."
+                )
+
+            self.respond(result)
+
 
         elif intent == "open_last_website":
 

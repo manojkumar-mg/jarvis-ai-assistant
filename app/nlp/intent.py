@@ -76,7 +76,11 @@ intent_phrases = {
         "is that still open",
         "what about it",
         "what about that",
-        "the website"
+        "the website",
+        "open that website again",
+        "open it again",
+        "open that again",
+        "launch the same website"
     ],
     "open_last_website": [
         "go there",
@@ -87,7 +91,13 @@ intent_phrases = {
         "take me back there",
         "open that site again",
         "go back there",
-        "return to that website"
+        "return to that website",
+    ],
+
+    "last_website": [
+        "what website did i open",
+        "which website did i open",
+        "what did i open"
     ],
     "context": [
         "what did I just do",
@@ -106,6 +116,7 @@ intent_phrases = {
 
 intent_priority = [
     "open_website",
+    "last_website",
     "open_last_website",
     "time",
     "date",
