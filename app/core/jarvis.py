@@ -97,10 +97,14 @@ class Jarvis:
 
         elif intent == "last_command":
             if self.last_command:
+
+                command = self.last_command
+
                 result = CommandResult(
-                True,
-                f"Your last command was: {self.last_command}"
+                        True,
+                        f"You last asked me to: {command}."
                 )
+
             else:
                 result = CommandResult(
                 False,
@@ -152,36 +156,21 @@ class Jarvis:
 
         elif intent == "context":
 
-            if self.context["last_action"]:
+            if self.last_command:
 
-                if self.context["last_website"]:
-                    website = self.context["last_website"]
-
-                    website = website.replace("https://www.", "")
-                    website = website.replace("https://", "")
-                    website = website.replace("http://www.", "")
-                    website = website.replace("http://", "")
-                    website = website.split(".")[0]
-
-                    result = CommandResult(
+                result = CommandResult(
                     True,
-                    f"You opened {website.capitalize()}."
-                    )
-
-                else:
-                    result = CommandResult(
-                    True,
-                    f"You recently executed: {self.context['last_action']}"
+                    self.get_action_summary()
                 )
 
             else:
+
                 result = CommandResult(
-                False,
-                "I don't have any recent action in my context."
+                    False,
+                    "I don't have any recent action in my context."
             )
 
             self.respond(result)
-
         elif intent == "reference":
 
             if self.context["last_website"]:
@@ -335,6 +324,35 @@ class Jarvis:
             "data": result.data if result else None
         })
         return True
+
+    def get_action_summary(self):
+
+        if self.last_intent == "time":
+            return "You just checked the time."
+
+        elif self.last_intent == "date":
+            return "You just checked the date."
+
+        elif self.last_intent == "greeting":
+            return "You just greeted me."
+
+        elif self.last_intent == "open_website":
+
+            website = self.context["last_website"]
+
+            if website:
+                website = website.replace("https://www.", "")
+                website = website.replace("https://", "")
+                website = website.replace("http://www.", "")
+                website = website.replace("http://", "")
+                website = website.split(".")[0]
+
+                return f"You just opened {website.capitalize()}."
+
+
+
+            return f"You recently executed: {self.last_command}"
+    
     def respond(self, result):
     
             if not result:
