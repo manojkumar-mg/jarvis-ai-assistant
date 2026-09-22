@@ -347,7 +347,24 @@ class Jarvis:
                 website = website.replace("http://", "")
                 website = website.split(".")[0]
 
-                return f"You just opened {website.capitalize()}."
+                display_names = {
+                        "github": "GitHub",
+                        "youtube": "YouTube",
+                        "linkedin": "LinkedIn",
+                        "whatsapp": "WhatsApp",
+                        "instagram": "Instagram",
+                        "facebook": "Facebook",
+                        "reddit": "Reddit",
+                        "google": "Google",
+                        "amazon": "Amazon"
+                        }
+
+                website_name = display_names.get(
+                        website.lower(),
+                        website.capitalize()
+                    )
+
+                return f"You just opened {website_name}."
 
 
 
