@@ -336,6 +336,36 @@ class Jarvis:
         elif self.last_intent == "greeting":
             return "You just greeted me."
 
+
+        elif self.last_intent == "open_last_website":
+            website = self.context["last_website"]
+
+            if website:
+                website = website.replace("https://www.", "")
+                website = website.replace("https://", "")
+                website = website.replace("http://www.", "")
+                website = website.replace("http://", "")
+                website = website.split(".")[0]
+
+                display_names = {
+                    "github": "GitHub",
+                    "youtube": "YouTube",
+                    "linkedin": "LinkedIn",
+                    "whatsapp": "WhatsApp",
+                    "instagram": "Instagram",
+                    "facebook": "Facebook",
+                    "reddit": "Reddit",
+                    "google": "Google",
+                    "amazon": "Amazon"
+                }
+
+                website_name = display_names.get(
+                    website.lower(),
+                    website.capitalize()
+                )
+
+                return f"You just reopened {website_name}."
+
         elif self.last_intent == "open_website":
 
             website = self.context["last_website"]
@@ -368,7 +398,10 @@ class Jarvis:
 
 
 
-            return f"You recently executed: {self.last_command}"
+            if self.last_command:
+                return f"You recently executed: {self.last_command}."
+
+        return "I don't have a recent action to summarize."
     
     def respond(self, result):
     
