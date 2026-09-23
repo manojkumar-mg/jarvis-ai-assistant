@@ -12,7 +12,8 @@ meta_intents = [
     "context",
     "history",
     "search_memory",
-    "reference"
+    "reference",
+    "repeat"
 ]
 
 class Jarvis:
@@ -28,6 +29,7 @@ class Jarvis:
 
         self.last_command = None
         self.last_intent = None
+        self.last_response = None
 
         self.context = {
             "last_action": None,
@@ -256,6 +258,24 @@ class Jarvis:
 
             self.respond(result)
 
+        elif intent == "repeat":
+
+            if self.last_response:
+
+                result = CommandResult(
+                True,
+                self.last_response
+            )
+
+            else:
+
+                result = CommandResult(
+                        False,
+                        "I don't have anything to repeat yet."
+                    )
+
+            self.respond(result)
+
 
         elif intent == "open_last_website":
 
@@ -404,11 +424,13 @@ class Jarvis:
         return "I don't have a recent action to summarize."
     
     def respond(self, result):
+            self.last_response = result.message
     
             if not result:
                 return
     
             if isinstance(result, CommandResult):
+                
                 print(result.message)
                 speak(result.message)
             else:

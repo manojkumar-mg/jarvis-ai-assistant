@@ -93,6 +93,13 @@ intent_phrases = {
         "go back there",
         "return to that website",
     ],
+    "repeat": [
+        "repeat that",
+        "say that again",
+        "repeat your answer",
+        "what did you say",
+        "say it again"
+    ],
 
     "last_website": [
         "what website did i open",
@@ -124,6 +131,7 @@ intent_priority = [
     "version",
     "last_command",
     "last_intent",
+    "repeat",
     "reference",
     "context",
     "history",
