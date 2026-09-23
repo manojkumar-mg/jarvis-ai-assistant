@@ -116,7 +116,14 @@ intent_phrases = {
         "which site did I visit",
         "tell me what I opened",
         "what site did I open"
-    ]
+    ],
+    "follow_up": [
+        "what about that",
+        "tell me more",
+        "and then",
+        "what next",
+        "continue"
+]
 
 }
 
@@ -132,6 +139,7 @@ intent_priority = [
     "last_command",
     "last_intent",
     "repeat",
+    "follow_up",
     "reference",
     "context",
     "history",

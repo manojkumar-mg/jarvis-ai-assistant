@@ -13,7 +13,8 @@ meta_intents = [
     "history",
     "search_memory",
     "reference",
-    "repeat"
+    "repeat",
+    "follow_up"
 ]
 
 class Jarvis:
@@ -305,6 +306,24 @@ class Jarvis:
                 "I could not identify the website."
                 )
                 self.respond(result)
+
+        elif intent == "follow_up":
+
+            if self.last_command:
+
+                result = CommandResult(
+                    True,
+                    f"Your previous action was: {self.last_command}"
+                )
+
+            else:
+
+                result = CommandResult(
+                    False,
+                    "I don't have a previous action to continue."
+                )
+
+            self.respond(result)
 
         elif intent == "exit":
             result = shutdown()
