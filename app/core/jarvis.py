@@ -277,6 +277,60 @@ class Jarvis:
 
             self.respond(result)
 
+        elif intent == "follow_up":
+
+            if not self.last_command:
+                result = CommandResult(
+                    False,
+                    "I don't have enough context to continue."
+                )
+
+            elif self.last_intent == "open_website":
+                website = self.context["last_website"]
+
+                if website:
+                    website = website.replace("https://www.", "")
+                    website = website.replace("https://", "")
+                    website = website.replace("http://www.", "")
+                    website = website.replace("http://", "")
+                    website = website.split(".")[0]
+
+                    display_names = {
+                        "github": "GitHub",
+                        "youtube": "YouTube",
+                        "linkedin": "LinkedIn",
+                        "whatsapp": "WhatsApp",
+                        "instagram": "Instagram",
+                        "facebook": "Facebook",
+                        "reddit": "Reddit",
+                        "google": "Google",
+                        "amazon": "Amazon"
+                        }
+
+                    website_name = display_names.get(
+                        website.lower(),
+                        website.capitalize()
+                    )
+
+                    result = CommandResult(
+                        True,
+                        f"You were working with {website_name}."
+                    )
+
+                else:
+                    result = CommandResult(
+                        True,
+                        f"Your previous action was: {self.last_command}"
+                    )
+
+            else:
+                result = CommandResult(
+                    True,
+                    f"You were working on: {self.last_command}"
+                )
+
+            self.respond(result)
+
 
         elif intent == "open_last_website":
 
@@ -435,6 +489,16 @@ class Jarvis:
 
                 return f"You just opened {website_name}."
 
+            
+            if self.last_command:
+                return f"You recently executed: {self.last_command}."
+
+            
+        elif self.last_intent == "time":
+            return "You were checking the current time."
+
+        elif self.last_intent == "date":
+            return "You were checking today's date."
 
 
             if self.last_command:
