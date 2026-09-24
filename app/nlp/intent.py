@@ -123,6 +123,13 @@ intent_phrases = {
         "and then",
         "what next",
         "continue"
+],
+    "recent_commands": [
+        "last 3 commands",
+        "last three commands",
+        "recent commands",
+        "what were my last 3 commands",
+        "show recent commands"
 ]
 
 }
@@ -136,6 +143,7 @@ intent_priority = [
     "date",
     "help",
     "version",
+    "recent_commands",
     "last_command",
     "last_intent",
     "repeat",

@@ -14,7 +14,8 @@ meta_intents = [
     "search_memory",
     "reference",
     "repeat",
-    "follow_up"
+    "follow_up",
+    "recent_commands"
 ]
 
 class Jarvis:
@@ -326,7 +327,34 @@ class Jarvis:
             else:
                 result = CommandResult(
                     True,
-                    f"You were working on: {self.last_command}"
+                    self.get_action_summary()
+                )
+
+            self.respond(result)
+
+        elif intent == "recent_commands":
+
+            recent = [
+                item["command"]
+                for item in self.command_history
+                if item.get("intent") not in meta_intents
+            ][-3:]
+
+            if recent:
+                lines = [
+                    f"{i}. {command}"
+                    for i, command in enumerate(recent, start=1)
+                ]
+
+                result = CommandResult(
+                    True,
+                    "Your recent commands:\n" + "\n".join(lines)
+                )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "You don't have any recent commands."
                 )
 
             self.respond(result)
@@ -361,23 +389,6 @@ class Jarvis:
                 )
                 self.respond(result)
 
-        elif intent == "follow_up":
-
-            if self.last_command:
-
-                result = CommandResult(
-                    True,
-                    f"Your previous action was: {self.last_command}"
-                )
-
-            else:
-
-                result = CommandResult(
-                    False,
-                    "I don't have a previous action to continue."
-                )
-
-            self.respond(result)
 
         elif intent == "exit":
             result = shutdown()
