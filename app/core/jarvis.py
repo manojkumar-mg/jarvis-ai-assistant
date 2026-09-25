@@ -1,5 +1,12 @@
 from app.core.router import route_command
-from app.nlp.intent import detect_intent, extract_website, get_website_url, extract_memory_keyword,split_commands
+from app.nlp.intent import (
+    detect_intent,
+    extract_website,
+    get_website_url,
+    extract_memory_keyword,
+    split_commands,
+    extract_search_query
+)
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
@@ -373,6 +380,32 @@ class Jarvis:
                     "I don't have a recently opened website."
                 )
                 self.respond(result)
+
+        elif intent == "search":
+
+            query = extract_search_query(command)
+
+            if query:
+                import urllib.parse
+                import webbrowser
+
+                encoded_query = urllib.parse.quote_plus(query)
+                url = f"https://www.google.com/search?q={encoded_query}"
+
+                webbrowser.open(url)
+
+                result = CommandResult(
+                    True,
+                    f"Searching for {query}."
+                )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "What would you like me to search for?"
+                )
+
+            self.respond(result)
                 
         elif intent == "open_website":
             website = extract_website(command)
@@ -509,7 +542,10 @@ class Jarvis:
             return "You were checking the current time."
 
         elif self.last_intent == "date":
-            return "You were checking today's date."
+            return "You just checked the date."
+
+        elif self.last_intent == "search":
+            return f"You just searched for: {self.last_command}."
 
 
             if self.last_command:
@@ -530,3 +566,5 @@ class Jarvis:
             else:
                 print(result)
                 speak(str(result))
+
+                

@@ -130,6 +130,12 @@ intent_phrases = {
         "recent commands",
         "what were my last 3 commands",
         "show recent commands"
+],
+    "search": [
+        "search for",
+        "search",
+        "look for",
+        "find"
 ]
 
 }
@@ -137,6 +143,7 @@ intent_phrases = {
 
 intent_priority = [
     "open_website",
+    "search",
     "last_website",
     "open_last_website",
     "time",
@@ -318,3 +325,19 @@ def split_commands(command):
             return commands
 
     return [command]
+
+def extract_search_query(command):
+    command = normalize_command(command)
+
+    prefixes = [
+        "search for ",
+        "search ",
+        "look for ",
+        "find "
+    ]
+
+    for prefix in prefixes:
+        if command.startswith(prefix):
+            return command[len(prefix):].strip()
+
+    return None
