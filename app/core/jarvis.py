@@ -42,7 +42,8 @@ class Jarvis:
 
         self.context = {
             "last_action": None,
-            "last_website": None
+            "last_website": None,
+            "last_search": None
         }
 
         if self.command_history:
@@ -443,7 +444,8 @@ class Jarvis:
 
             if intent == "open_website":
                 self.context["last_website"] = result.data.get("url") if result.data else None
-
+            if intent == "search":
+                self.context["last_search"] = extract_search_query(command)
 
         self.command_history.append({
             "command": command,
@@ -545,11 +547,27 @@ class Jarvis:
             return "You just checked the date."
 
         elif self.last_intent == "search":
-            return f"You just searched for: {self.last_command}."
+
+            query = self.context["last_search"]
+
+            if query:
+                return f"You just searched for {query}."
+
+            return f"You recently executed: {self.last_command}."
+
+        
+        elif self.last_intent == "search":
+
+            query = self.context["last_search"]
+
+            if query:
+                return f"You just searched for {query}."
+
+            return f"You recently executed: {self.last_command}."
 
 
-            if self.last_command:
-                return f"You recently executed: {self.last_command}."
+        if self.last_command:
+            return f"You recently executed: {self.last_command}."
 
         return "I don't have a recent action to summarize."
     
