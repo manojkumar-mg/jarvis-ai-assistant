@@ -131,6 +131,12 @@ intent_phrases = {
         "what were my last 3 commands",
         "show recent commands"
 ],
+    "search_again": [
+        "search again",
+        "search that again",
+        "repeat the search",
+        "search the same thing again"
+],
     "search": [
         "search for",
         "search",
@@ -143,6 +149,7 @@ intent_phrases = {
 
 intent_priority = [
     "open_website",
+    "search_again",
     "search",
     "last_website",
     "open_last_website",

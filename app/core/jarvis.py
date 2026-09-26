@@ -382,6 +382,32 @@ class Jarvis:
                 )
                 self.respond(result)
 
+        elif intent == "search_again":
+
+            query = self.context["last_search"]
+
+            if query:
+                import urllib.parse
+                import webbrowser
+
+                encoded_query = urllib.parse.quote_plus(query)
+                url = f"https://www.google.com/search?q={encoded_query}"
+
+                webbrowser.open(url)
+
+                result = CommandResult(
+                    True,
+                    f"Searching for {query} again."
+                )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "I don't have a previous search to repeat."
+                )
+
+            self.respond(result)
+
         elif intent == "search":
 
             query = extract_search_query(command)
@@ -446,6 +472,9 @@ class Jarvis:
                 self.context["last_website"] = result.data.get("url") if result.data else None
             if intent == "search":
                 self.context["last_search"] = extract_search_query(command)
+            if intent == "search_again":
+                self.context["last_search"] = self.context["last_search"]
+
 
         self.command_history.append({
             "command": command,
@@ -546,7 +575,8 @@ class Jarvis:
         elif self.last_intent == "date":
             return "You just checked the date."
 
-        elif self.last_intent == "search":
+        elif self.last_intent in ["search", "search_again"]:
+
 
             query = self.context["last_search"]
 
