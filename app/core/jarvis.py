@@ -5,7 +5,8 @@ from app.nlp.intent import (
     get_website_url,
     extract_memory_keyword,
     split_commands,
-    extract_search_query
+    extract_search_query,
+    extract_url
 )
 from app.voice.tts import speak
 from app.voice.speech import listen
@@ -433,6 +434,28 @@ class Jarvis:
                 )
 
             self.respond(result)
+
+        elif intent == "url":
+
+            url = extract_url(command)
+
+            if url:
+                import webbrowser
+
+                webbrowser.open(url)
+
+                result = CommandResult(
+                    True,
+                    f"Opening {url}."
+                )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "I could not find a valid URL."
+                )
+
+            self.respond(result)
                 
         elif intent == "open_website":
             website = extract_website(command)
@@ -472,9 +495,7 @@ class Jarvis:
                 self.context["last_website"] = result.data.get("url") if result.data else None
             if intent == "search":
                 self.context["last_search"] = extract_search_query(command)
-            if intent == "search_again":
-                self.context["last_search"] = self.context["last_search"]
-
+           
 
         self.command_history.append({
             "command": command,

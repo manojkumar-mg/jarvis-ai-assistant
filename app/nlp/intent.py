@@ -137,6 +137,12 @@ intent_phrases = {
         "repeat the search",
         "search the same thing again"
 ],
+    "url": [
+        "open http://",
+        "open https://",
+        "go to http://",
+        "go to https://"
+],
     "search": [
         "search for",
         "search",
@@ -148,6 +154,7 @@ intent_phrases = {
 
 
 intent_priority = [
+    "url",
     "open_website",
     "search_again",
     "search",
@@ -346,5 +353,16 @@ def extract_search_query(command):
     for prefix in prefixes:
         if command.startswith(prefix):
             return command[len(prefix):].strip()
+
+    return None
+
+def extract_url(command):
+    command = command.strip()
+
+    words = command.split()
+
+    for word in words:
+        if word.startswith("http://") or word.startswith("https://"):
+            return word
 
     return None
