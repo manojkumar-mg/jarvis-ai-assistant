@@ -66,11 +66,18 @@ intent_phrases = {
         "what commands did I use"
     ],
     "search_memory": [
+        "what did I search for",
+        "what was my last search",
+        "what did I search",
+        "what was the last thing I searched for",
         "search memory",
         "find in memory",
         "search my memory"
     ],
     "reference": [
+        "what is that",
+        "what is this",
+        "what is it",
         "is it still open",
         "is it open",
         "is that still open",
@@ -161,6 +168,7 @@ intent_priority = [
     "url",
     "open_website",
     "search_again",
+    "search_memory",
     "search",
     "last_website",
     "open_last_website",
@@ -176,7 +184,6 @@ intent_priority = [
     "reference",
     "context",
     "history",
-    "search_memory",
     "exit",
     "greeting"
 ]
@@ -303,6 +310,17 @@ def get_website_url(website):
 
 def extract_memory_keyword(command):
     command = normalize_command(command)
+
+    search_memory_phrases = [
+        "what did i search for",
+        "what was my last search",
+        "what did i search",
+        "what was the last thing i searched for"
+    ]
+
+    if command in search_memory_phrases:
+        return "search"
+
     words = command.split()
 
     keywords = [

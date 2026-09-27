@@ -20,6 +20,7 @@ meta_intents = [
     "context",
     "history",
     "search_memory",
+    "reopen_url",
     "reference",
     "repeat",
     "follow_up",
@@ -145,24 +146,57 @@ class Jarvis:
             results = self.memory.search(keyword)
 
             if results:
-                history_text = "Memory Search Results:\n"
 
-                for index, item in enumerate(results, start=1):
-                    history_text += (
-                        f"{index}. {item['command']} "
-                        f"| Intent: {item['intent']} "
-                        f"| Status: {'Success' if item['success'] else 'Failed'}\n"
+                # Special handling for search-memory questions
+                if keyword == "search":
+                    successful_searches = [
+                        item for item in results
+                        if item.get("intent") == "search"
+                        and item.get("success")
+                    ]
+
+                    if successful_searches:
+                        last_search = successful_searches[-1]
+                        query = extract_search_query(last_search["command"])
+
+                        if query:
+                            result = CommandResult(
+                                True,
+                                f"You last searched for {query}.",
+                                last_search
+                            )
+                        else:
+                            result = CommandResult(
+                                True,
+                                f"Your last search was: {last_search['command']}.",
+                                last_search
+                            )
+                    else:
+                        result = CommandResult(
+                            False,
+                            "I don't have a successful search in memory."
                         )
 
-                result = CommandResult(
-                    True,
-                    history_text,
-                    results
-                )
+                else:
+                    history_text = "Memory Search Results:\n"
+
+                    for index, item in enumerate(results, start=1):
+                        history_text += (
+                            f"{index}. {item['command']} "
+                            f"| Intent: {item['intent']} "
+                            f"| Status: {'Success' if item['success'] else 'Failed'}\n"
+                        )
+
+                    result = CommandResult(
+                        True,
+                        history_text,
+                        results
+                    )
+
             else:
                 result = CommandResult(
-                False,
-                f"I couldn't find anything related to {keyword}."
+                    False,
+                    f"I couldn't find anything related to {keyword}."
                 )
 
             self.respond(result)
@@ -374,14 +408,23 @@ class Jarvis:
             website_url = self.context["last_website"]
 
             if website_url:
-                result = route_command("open_website", website_url)
-                self.respond(result)
+                import webbrowser
+
+                webbrowser.open(website_url)
+
+                result = CommandResult(
+                    True,
+                    f"Opening {website_url} again.",
+                    {"url": website_url}
+                )
+
             else:
                 result = CommandResult(
                     False,
                     "I don't have a recently opened website."
                 )
-                self.respond(result)
+
+            self.respond(result)
 
         elif intent == "search_again":
 
@@ -492,6 +535,8 @@ class Jarvis:
             self.last_intent = intent
             self.context["last_action"] = command
 
+            if intent == "search":
+                self.context["last_search"] = extract_search_query(command)
             if intent == "open_website":
                 self.context["last_website"] = result.data.get("url") if result.data else None
             if intent in ["open_website", "url"]:
