@@ -446,7 +446,8 @@ class Jarvis:
 
                 result = CommandResult(
                     True,
-                    f"Opening {url}."
+                    f"Opening {url}.",
+                    {"url": url}
                 )
 
             else:
@@ -493,9 +494,8 @@ class Jarvis:
 
             if intent == "open_website":
                 self.context["last_website"] = result.data.get("url") if result.data else None
-            if intent == "search":
-                self.context["last_search"] = extract_search_query(command)
-           
+            if intent in ["open_website", "url"]:
+                self.context["last_website"] = result.data.get("url") if result.data else None
 
         self.command_history.append({
             "command": command,

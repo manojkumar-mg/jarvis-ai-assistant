@@ -102,6 +102,10 @@ intent_phrases = {
     ],
 
     "last_website": [
+        "last website",
+        "what was the last website",
+        "which website did I open last",
+        "what website did I open last",
         "what website did i open",
         "which website did i open",
         "what did i open"
