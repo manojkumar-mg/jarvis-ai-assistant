@@ -23,6 +23,7 @@ meta_intents = [
     "reopen_url",
     "reference",
     "repeat",
+    "repeat_action",
     "follow_up",
     "recent_commands"
 ]
@@ -302,6 +303,41 @@ class Jarvis:
                 )
 
             self.respond(result)
+
+        elif intent == "repeat_action":
+
+            if self.last_command:
+
+                previous_command = self.last_command
+                previous_intent = self.last_intent
+
+                if previous_intent == "search":
+                    query = extract_search_query(previous_command)
+
+                    result = CommandResult(
+                        True,
+                        f"Searching for {query} again."
+                    )
+
+                    import webbrowser
+                    webbrowser.open(
+                        f"https://www.google.com/search?q={query.replace(' ', '+')}"
+                    )
+
+                    self.respond(result)
+
+                else:
+                    self.process_command(previous_command)
+
+                return
+
+            else:
+                result = CommandResult(
+                    False,
+                    "I don't have a previous action to repeat."
+                )
+
+                self.respond(result)
 
         elif intent == "repeat":
 

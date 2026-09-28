@@ -117,6 +117,14 @@ intent_phrases = {
         "which website did i open",
         "what did i open"
     ],
+    "repeat_action": [
+        "do it again",
+        "do that again",
+        "do the same thing",
+        "repeat that action",
+        "repeat the action",
+        "run that again"
+    ],
     "context": [
         "what did I just do",
         "what did I just open",
@@ -179,6 +187,7 @@ intent_priority = [
     "recent_commands",
     "last_command",
     "last_intent",
+    "repeat_action",
     "repeat",
     "follow_up",
     "reference",
