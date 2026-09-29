@@ -161,7 +161,21 @@ intent_phrases = {
         "open https://",
         "go to http://",
         "go to https://"
-],
+    ],
+    "remember_fact": [
+        "remember that",
+        "remember my",
+        "remember this",
+        "don't forget that",
+        "don't forget my"
+    ],
+
+    "recall_fact": [
+        "what is my",
+        "what was my",
+        "do you remember my",
+        "what did I tell you about"
+    ],
     "search": [
         "search for",
         "search",
@@ -177,6 +191,8 @@ intent_priority = [
     "open_website",
     "search_again",
     "search_memory",
+    "remember_fact",
+    "recall_fact",
     "search",
     "last_website",
     "open_last_website",
@@ -395,5 +411,23 @@ def extract_url(command):
     for word in words:
         if word.startswith("http://") or word.startswith("https://"):
             return word
+
+    return None
+
+def extract_fact(command):
+    command = command.strip()
+
+    prefixes = [
+        "remember that",
+        "remember my",
+        "remember this",
+        "don't forget that",
+        "don't forget my"
+    ]
+
+    for prefix in prefixes:
+        if command.lower().startswith(prefix):
+            fact = command[len(prefix):].strip()
+            return fact
 
     return None

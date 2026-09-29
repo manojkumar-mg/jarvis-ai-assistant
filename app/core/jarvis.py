@@ -6,7 +6,8 @@ from app.nlp.intent import (
     extract_memory_keyword,
     split_commands,
     extract_search_query,
-    extract_url
+    extract_url,
+    extract_fact
 )
 from app.voice.tts import speak
 from app.voice.speech import listen
@@ -458,6 +459,38 @@ class Jarvis:
                 result = CommandResult(
                     False,
                     "I don't have a recently opened website."
+                )
+
+            self.respond(result)
+
+        elif intent == "remember_fact":
+
+            fact = extract_fact(command)
+
+            if fact:
+                if " is " in fact.lower():
+                    key, value = fact.split(" is ", 1)
+
+                    self.memory.add_fact(
+                        key.strip(),
+                        value.strip()
+                    )
+
+                    result = CommandResult(
+                            True,
+                            f"I'll remember that {key.strip()} is {value.strip()}."
+                    )
+
+                else:
+                    result = CommandResult(
+                            False,
+                            "Tell me what you want me to remember."
+                    )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "Tell me what you want me to remember."
                 )
 
             self.respond(result)

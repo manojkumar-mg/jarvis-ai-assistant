@@ -7,25 +7,51 @@ class Memory:
     def __init__(self, file_path="app/memory/memory.json"):
         self.file_path = file_path
         self.data = []
+        self.facts = {}
 
     def load(self):
         if not os.path.exists(self.file_path):
             self.data = []
+            self.facts = {}
             return
 
         with open(self.file_path, "r") as file:
-            self.data = json.load(file)
+            stored_data = json.load(file)
+
+        # Support existing memory.json format
+        if isinstance(stored_data, list):
+            self.data = stored_data
+            self.facts = {}
+
+        elif isinstance(stored_data, dict):
+            self.data = stored_data.get("commands", [])
+            self.facts = stored_data.get("facts", {})
 
     def save(self):
         with open(self.file_path, "w") as file:
-            json.dump(self.data, file, indent=4)
+            json.dump(
+                {
+                    "commands": self.data,
+                    "facts": self.facts
+                },
+                file,
+                indent=4
+            )
 
     def add(self, item):
         self.data.append(item)
         self.save()
 
+    def add_fact(self, key, value):
+        self.facts[key.lower()] = value
+        self.save()
+
+    def get_fact(self, key):
+        return self.facts.get(key.lower())
+
     def clear(self):
         self.data = []
+        self.facts = {}
         self.save()
 
     def get_recent(self, limit=5):
