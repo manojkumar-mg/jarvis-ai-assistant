@@ -428,6 +428,26 @@ def extract_fact(command):
     for prefix in prefixes:
         if command.lower().startswith(prefix):
             fact = command[len(prefix):].strip()
+
+            if fact.lower().startswith("my "):
+                fact = fact[3:].strip()
+
             return fact
+
+    return None
+
+def extract_fact_key(command):
+    command = command.strip().lower()
+
+    prefixes = [
+        "what is my",
+        "what was my",
+        "do you remember my"
+    ]
+
+    for prefix in prefixes:
+        if command.startswith(prefix):
+            key = command[len(prefix):].strip()
+            return key
 
     return None

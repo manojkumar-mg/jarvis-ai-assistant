@@ -7,7 +7,8 @@ from app.nlp.intent import (
     split_commands,
     extract_search_query,
     extract_url,
-    extract_fact
+    extract_fact,
+    extract_fact_key
 )
 from app.voice.tts import speak
 from app.voice.speech import listen
@@ -491,6 +492,32 @@ class Jarvis:
                 result = CommandResult(
                     False,
                     "Tell me what you want me to remember."
+                )
+
+            self.respond(result)
+
+        elif intent == "recall_fact":
+
+            key = extract_fact_key(command)
+
+            if key:
+                value = self.memory.get_fact(key)
+
+                if value:
+                    result = CommandResult(
+                    True,
+                    f"Your {key} is {value}."
+                 )
+                else:   
+                    result = CommandResult(
+                    False,
+                    f"I don't remember your {key}."
+                )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "What would you like me to remember?"
                 )
 
             self.respond(result)
