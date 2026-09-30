@@ -386,6 +386,30 @@ class Jarvis:
 
             self.respond(result)
 
+        elif intent == "list_facts":
+
+            facts = self.memory.facts
+
+            if facts:
+                memory_text = "Here's what I remember about you:\n"
+
+                for key, value in facts.items():
+                    memory_text += f"- Your {key} is {value}.\n"
+
+                result = CommandResult(
+                    True,
+                    memory_text,
+                    facts
+                )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "I don't have any personal facts saved yet."
+                )
+
+            self.respond(result)
+
         elif intent == "follow_up":
 
             if not self.last_command:

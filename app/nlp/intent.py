@@ -186,6 +186,12 @@ intent_phrases = {
         "do you remember my",
         "what did I tell you about"
     ],
+    "list_facts": [
+        "what do you remember",
+        "what do you know about me",
+        "tell me what you remember",
+        "show my memories"
+    ],
     "search": [
         "search for",
         "search",
@@ -204,6 +210,7 @@ intent_priority = [
     "remember_fact",
     "recall_fact",
     "forget_fact",
+    "list_facts",
     "search",
     "last_website",
     "open_last_website",
