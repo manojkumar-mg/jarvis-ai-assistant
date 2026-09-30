@@ -49,6 +49,16 @@ class Memory:
     def get_fact(self, key):
         return self.facts.get(key.lower())
 
+    def forget_fact(self, key):
+        key = key.lower()
+
+        if key in self.facts:
+            del self.facts[key]
+            self.save()
+            return True
+
+        return False
+
     def clear(self):
         self.data = []
         self.facts = {}

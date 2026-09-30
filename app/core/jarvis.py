@@ -8,7 +8,8 @@ from app.nlp.intent import (
     extract_search_query,
     extract_url,
     extract_fact,
-    extract_fact_key
+    extract_fact_key,
+    extract_forget_fact_key
 )
 from app.voice.tts import speak
 from app.voice.speech import listen
@@ -356,6 +357,32 @@ class Jarvis:
                         False,
                         "I don't have anything to repeat yet."
                     )
+
+            self.respond(result)
+
+        elif intent == "forget_fact":
+
+            key = extract_forget_fact_key(command)
+
+            if key:
+                deleted = self.memory.forget_fact(key)
+
+                if deleted:
+                    result = CommandResult(
+                        True,
+                        f"I've forgotten your {key}."
+                    )
+                else:
+                    result = CommandResult(
+                        False,
+                        f"I don't remember your {key}."
+                    )
+
+            else:
+                result = CommandResult(
+                    False,
+                    "Tell me which fact you want me to forget."
+                )
 
             self.respond(result)
 

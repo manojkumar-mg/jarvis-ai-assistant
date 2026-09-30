@@ -170,6 +170,16 @@ intent_phrases = {
         "don't forget my"
     ],
 
+    "forget_fact": [
+        "forget my",
+        "forget that",
+        "forget this",
+        "remove my",
+        "remove that",
+        "delete my",
+        "delete that"
+    ],
+
     "recall_fact": [
         "what is my",
         "what was my",
@@ -193,6 +203,7 @@ intent_priority = [
     "search_memory",
     "remember_fact",
     "recall_fact",
+    "forget_fact",
     "search",
     "last_website",
     "open_last_website",
@@ -448,6 +459,30 @@ def extract_fact_key(command):
     for prefix in prefixes:
         if command.startswith(prefix):
             key = command[len(prefix):].strip()
+            return key
+
+    return None
+
+def extract_forget_fact_key(command):
+    command = command.strip().lower()
+
+    prefixes = [
+        "forget my",
+        "forget that",
+        "forget this",
+        "remove my",
+        "remove that",
+        "delete my",
+        "delete that"
+    ]
+
+    for prefix in prefixes:
+        if command.startswith(prefix):
+            key = command[len(prefix):].strip()
+
+            if key.startswith("my "):
+                key = key[3:].strip()
+
             return key
 
     return None
