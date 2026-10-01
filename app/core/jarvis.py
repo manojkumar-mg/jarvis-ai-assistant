@@ -332,7 +332,7 @@ class Jarvis:
                 else:
                     self.process_command(previous_command)
 
-                return
+                return True
 
             else:
                 result = CommandResult(

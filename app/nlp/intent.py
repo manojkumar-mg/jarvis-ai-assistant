@@ -184,7 +184,11 @@ intent_phrases = {
         "what is my",
         "what was my",
         "do you remember my",
-        "what did I tell you about"
+        "what did I tell you about",
+        "and my",
+        "and my favorite",
+        "what about my",
+        "and my language"
     ],
     "list_facts": [
         "what do you remember",
@@ -470,17 +474,39 @@ def extract_fact_key(command):
 
     return None
 
+def extract_fact_key(command):
+    command = command.strip().lower()
+
+    prefixes = [
+        "what is my",
+        "what was my",
+        "do you remember my",
+        "what did i tell you about",
+        "what about my",
+        "and my"
+    ]
+
+    for prefix in prefixes:
+        if command.startswith(prefix):
+            key = command[len(prefix):].strip()
+
+            if key.startswith("my "):
+                key = key[3:].strip()
+
+            return key
+
+    return None
+
 def extract_forget_fact_key(command):
     command = command.strip().lower()
 
     prefixes = [
         "forget my",
-        "forget that",
-        "forget this",
+        "forget",
         "remove my",
-        "remove that",
+        "remove",
         "delete my",
-        "delete that"
+        "delete"
     ]
 
     for prefix in prefixes:
