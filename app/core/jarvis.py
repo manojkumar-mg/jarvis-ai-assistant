@@ -410,7 +410,24 @@ class Jarvis:
 
             self.respond(result)
 
+      
         elif intent == "follow_up":
+
+            command_lower = command.lower()
+            if (
+                "tell me more" in command_lower
+                or "explain it further" in command_lower
+            ):
+                follow_up_type = "more"
+
+            elif (
+                "what is its use" in command_lower
+                or "what does it do" in command_lower
+            ):
+                follow_up_type = "use"
+
+            else:
+                follow_up_type = "general"
 
             if not self.last_command:
                 result = CommandResult(
@@ -418,6 +435,38 @@ class Jarvis:
                     "I don't have enough context to continue."
                 )
 
+            elif (
+                self.last_intent == "search"
+                and follow_up_type in ["more", "use"]
+            ):
+                query = self.context.get("last_search")
+
+                if query:
+                    import urllib.parse
+                    import webbrowser
+
+                    if follow_up_type == "more":
+                        follow_up_query = query + " more details"
+                    else:
+                        follow_up_query = query + " uses"
+
+                    search_url = (
+                        "https://www.google.com/search?q="
+                        + urllib.parse.quote_plus(follow_up_query)
+                    )
+
+                    webbrowser.open(search_url)
+
+                    result = CommandResult(
+                        True,
+                        f"Searching for {follow_up_query}."
+                    )
+
+                else:
+                    result = CommandResult(
+                        False,
+                        "I couldn't find your previous search."
+                    )
             elif self.last_intent == "open_website":
                 website = self.context["last_website"]
 
@@ -438,7 +487,7 @@ class Jarvis:
                         "reddit": "Reddit",
                         "google": "Google",
                         "amazon": "Amazon"
-                        }
+                    }
 
                     website_name = display_names.get(
                         website.lower(),
@@ -456,40 +505,41 @@ class Jarvis:
                         f"Your previous action was: {self.last_command}"
                     )
 
+            elif self.last_intent == "search":
+                query = self.context.get("last_search")
+
+                if query:
+                    import urllib.parse
+                    import webbrowser
+
+                    follow_up_query = query + " related information"
+
+                    search_url = (
+                        "https://www.google.com/search?q="
+                        + urllib.parse.quote_plus(follow_up_query)
+                    )
+
+                    webbrowser.open(search_url)
+
+                    result = CommandResult(
+                        True,
+                        f"Searching for related information about {query}."
+                    )
+                else:
+                    result = CommandResult(
+                        True,
+                        self.get_action_summary()
+                    )
+
             else:
                 result = CommandResult(
                     True,
                     self.get_action_summary()
                 )
 
-            self.respond(result)
-
-        elif intent == "recent_commands":
-
-            recent = [
-                item["command"]
-                for item in self.command_history
-                if item.get("intent") not in meta_intents
-            ][-3:]
-
-            if recent:
-                lines = [
-                    f"{i}. {command}"
-                    for i, command in enumerate(recent, start=1)
-                ]
-
-                result = CommandResult(
-                    True,
-                    "Your recent commands:\n" + "\n".join(lines)
-                )
-
-            else:
-                result = CommandResult(
-                    False,
-                    "You don't have any recent commands."
-                )
 
             self.respond(result)
+
 
 
         elif intent == "open_last_website":
@@ -818,6 +868,7 @@ class Jarvis:
             self.last_response = result.message
     
             if not result:
+                
                 return
     
             if isinstance(result, CommandResult):

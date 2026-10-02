@@ -141,6 +141,10 @@ intent_phrases = {
         "tell me more",
         "and then",
         "what next",
+        "what is its use",
+        "what does it do",
+        "tell me more about it",
+        "explain it further",
         "continue"
 ],
     "recent_commands": [
