@@ -414,6 +414,7 @@ class Jarvis:
         elif intent == "follow_up":
 
             command_lower = command.lower()
+
             if (
                 "tell me more" in command_lower
                 or "explain it further" in command_lower
@@ -423,11 +424,34 @@ class Jarvis:
             elif (
                 "what is its use" in command_lower
                 or "what does it do" in command_lower
+                or "why is it useful" in command_lower
             ):
                 follow_up_type = "use"
 
+            elif (
+                "give me an example" in command_lower
+                or "show me an example" in command_lower
+            ):
+                follow_up_type = "example"
+
+            elif (
+                "explain in simple words" in command_lower
+                or "make it simpler" in command_lower
+            ):
+                follow_up_type = "simple"
+
+            elif "what are the benefits" in command_lower:
+                follow_up_type = "benefits"
+
+            elif "what are the disadvantages" in command_lower:
+                follow_up_type = "disadvantages"
+
+            elif "how does it work" in command_lower:
+                follow_up_type = "how"
+
             else:
                 follow_up_type = "general"
+
 
             if not self.last_command:
                 result = CommandResult(
@@ -437,7 +461,10 @@ class Jarvis:
 
             elif (
                 self.last_intent == "search"
-                and follow_up_type in ["more", "use"]
+                and follow_up_type in [
+                "more", "use", "example", "simple",
+                "benefits", "disadvantages", "how"
+                ]
             ):
                 query = self.context.get("last_search")
 
@@ -445,10 +472,19 @@ class Jarvis:
                     import urllib.parse
                     import webbrowser
 
-                    if follow_up_type == "more":
-                        follow_up_query = query + " more details"
-                    else:
-                        follow_up_query = query + " uses"
+                    follow_up_suffixes = {
+                            "more": "more details",
+                            "use": "uses",
+                            "example": "examples",
+                            "simple": "explained in simple terms",
+                            "benefits": "benefits",
+                            "disadvantages": "disadvantages",
+                            "how": "how it works"
+                    }
+
+                    follow_up_query = (
+                                query + " " + follow_up_suffixes[follow_up_type]
+                    )
 
                     search_url = (
                         "https://www.google.com/search?q="
