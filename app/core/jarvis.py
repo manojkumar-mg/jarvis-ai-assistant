@@ -452,6 +452,21 @@ class Jarvis:
             else:
                 follow_up_type = "general"
 
+            
+            if self.last_intent == "search":
+                query = self.context.get("last_search")
+
+                if query and follow_up_type != "general":
+                    local_answer = self.get_local_follow_up_answer(
+                        query,
+                        follow_up_type
+                    )
+
+                    if local_answer:
+                        result = CommandResult(True, local_answer)
+                        self.respond(result)
+                        return
+
 
             if not self.last_command:
                 result = CommandResult(
@@ -899,6 +914,29 @@ class Jarvis:
             return f"You recently executed: {self.last_command}."
 
         return "I don't have a recent action to summarize."
+
+        
+    def get_local_follow_up_answer(self, query, follow_up_type):
+        topic = query.lower()
+
+        knowledge_base = {
+            "python": {
+                "more": "Python is a high-level, interpreted programming language known for its simple syntax and readability.",
+                "use": "Python is used for web development, automation, data science, artificial intelligence, and scripting.",
+                "example": "For example, print('Hello, World!') displays Hello, World! on the screen.",
+                "simple": "Python is a programming language that lets you give instructions to a computer using simple, readable code.",
+                "benefits": "Python is easy to learn, has a large community, offers many libraries, and supports several areas of development.",
+                "disadvantages": "Python can be slower than compiled languages, may use more memory, and is not always ideal for mobile applications.",
+                "how": "Python code is interpreted by the Python runtime, which executes your instructions to produce the required output."
+            }
+        }
+
+        for keyword, answers in knowledge_base.items():
+            if keyword in topic:
+                return answers.get(follow_up_type)
+
+        return None
+
     
     def respond(self, result):
             self.last_response = result.message
