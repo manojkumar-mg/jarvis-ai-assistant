@@ -11,7 +11,7 @@ from app.nlp.intent import (
     extract_fact_key,
     extract_forget_fact_key
 )
-from app.data.knowledge import KNOWLEDGE_BASE
+from app.data.knowledge import KNOWLEDGE_BASE, TOPIC_ALIASES
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
@@ -920,8 +920,11 @@ class Jarvis:
     def get_local_follow_up_answer(self, query, follow_up_type):
         topic = query.lower()
 
+        for alias, actual_topic in TOPIC_ALIASES.items():
+            if alias in topic:
+                topic = topic.replace(alias, actual_topic)
+
         knowledge_base = KNOWLEDGE_BASE
-            
 
         for keyword, answers in knowledge_base.items():
             if keyword in topic:

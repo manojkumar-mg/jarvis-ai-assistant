@@ -1,3 +1,13 @@
+TOPIC_ALIASES = {
+    "python programming": "python",
+    "python language": "python",
+    "java programming": "java",
+    "java language": "java",
+    "c programming": "c",
+    "c language": "c"
+}
+
+
 KNOWLEDGE_BASE = {
     "python": {
         "more": "Python is a high-level, interpreted programming language known for its simple syntax and readability.",
@@ -30,3 +40,4 @@ KNOWLEDGE_BASE = {
     }
 
 }
+
