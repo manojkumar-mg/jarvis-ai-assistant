@@ -11,7 +11,7 @@ from app.nlp.intent import (
     extract_fact_key,
     extract_forget_fact_key
 )
-from app.data.knowledge import KNOWLEDGE_BASE, TOPIC_ALIASES
+from app.data.knowledge import KNOWLEDGE_BASE, TOPIC_ALIASES, find_topic
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
@@ -917,20 +917,14 @@ class Jarvis:
         return "I don't have a recent action to summarize."
 
         
+   
     def get_local_follow_up_answer(self, query, follow_up_type):
-        topic = query.lower()
+        topic = find_topic(query)
 
-        for alias, actual_topic in TOPIC_ALIASES.items():
-            if alias in topic:
-                topic = topic.replace(alias, actual_topic)
+        if not topic:
+            return None
 
-        knowledge_base = KNOWLEDGE_BASE
-
-        for keyword, answers in knowledge_base.items():
-            if keyword in topic:
-                return answers.get(follow_up_type)
-
-        return None
+        return KNOWLEDGE_BASE[topic].get(follow_up_type)
 
     
     def respond(self, result):

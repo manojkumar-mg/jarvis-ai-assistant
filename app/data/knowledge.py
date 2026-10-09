@@ -41,3 +41,19 @@ KNOWLEDGE_BASE = {
 
 }
 
+
+def find_topic(query):
+    topic = query.lower().strip()
+
+    for alias, actual_topic in TOPIC_ALIASES.items():
+        if alias in topic:
+            return actual_topic
+
+    words = topic.split()
+
+    for keyword in KNOWLEDGE_BASE:
+        if keyword in words:
+            return keyword
+
+    return None
+
