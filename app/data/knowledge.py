@@ -42,11 +42,21 @@ KNOWLEDGE_BASE = {
 }
 
 
+
+import re
+
 def find_topic(query):
     topic = query.lower().strip()
+    topic = re.sub(r"[^\w\s]", " ", topic)
+    topic = " ".join(topic.split())
 
     for alias, actual_topic in TOPIC_ALIASES.items():
-        if alias in topic:
+        normalized_alias = re.sub(
+            r"[^\w\s]", " ", alias.lower()
+        )
+        normalized_alias = " ".join(normalized_alias.split())
+
+        if f" {normalized_alias} " in f" {topic} ":
             return actual_topic
 
     words = topic.split()
@@ -56,4 +66,5 @@ def find_topic(query):
             return keyword
 
     return None
+
 
