@@ -4,7 +4,10 @@ TOPIC_ALIASES = {
     "java programming": "java",
     "java language": "java",
     "c programming": "c",
-    "c language": "c"
+    "c language": "c",
+    "sql language": "sql",
+    "sql programming": "sql",
+    "structured query language": "sql"
 }
 
 
@@ -28,6 +31,17 @@ KNOWLEDGE_BASE = {
         "disadvantages": "C requires careful memory management and does not provide some high-level features found in modern languages.",
         "how": "C source code is compiled into machine code, which the computer can execute directly."
     },  
+    
+"sql": {
+    "more": "SQL stands for Structured Query Language and is used to work with relational databases.",
+    "use": "SQL is used to retrieve, insert, update, and delete data in relational databases.",
+    "example": "For example, SELECT * FROM students; retrieves all records from the students table.",
+    "simple": "SQL is a language that helps us store, find, and manage data in databases.",
+    "benefits": "SQL makes data retrieval efficient, supports structured queries, and works with many database systems.",
+    "disadvantages": "SQL databases can require careful schema design and may need additional strategies to scale across distributed systems.",
+    "how": "SQL statements are sent to a database system, which processes the query and returns results or performs the requested operation."
+},
+
 
     "java": {
         "more": "Java is a high-level, object-oriented programming language designed to be portable and reliable.",
