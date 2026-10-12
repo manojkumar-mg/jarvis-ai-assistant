@@ -103,3 +103,23 @@ def find_topics(query):
             found_topics.append(keyword)
 
     return found_topics
+
+
+def compare_topics(query, follow_up_type="simple"):
+    topics = find_topics(query)
+
+    if len(topics) < 2:
+        return None
+
+    comparisons = []
+
+    for topic in topics:
+        answer = KNOWLEDGE_BASE[topic].get(follow_up_type)
+
+        if answer:
+            comparisons.append(f"{topic.title()}: {answer}")
+
+    if len(comparisons) < 2:
+        return None
+
+    return "\n\n".join(comparisons)

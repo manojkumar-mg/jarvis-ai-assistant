@@ -11,7 +11,12 @@ from app.nlp.intent import (
     extract_fact_key,
     extract_forget_fact_key
 )
-from app.data.knowledge import KNOWLEDGE_BASE, TOPIC_ALIASES, find_topic
+from app.data.knowledge import (
+    KNOWLEDGE_BASE,
+    TOPIC_ALIASES,
+    find_topic,
+    compare_topics
+)
 from app.voice.tts import speak
 from app.voice.speech import listen
 from app.commands.system import shutdown
@@ -415,6 +420,16 @@ class Jarvis:
         elif intent == "follow_up":
 
             command_lower = command.lower()
+
+            
+            if "compare" in command_lower:
+                comparison = compare_topics(command)
+
+                if comparison:
+                    result = CommandResult(True, comparison)
+                    self.respond(result)
+                    return
+
 
             if (
                 "tell me more" in command_lower
