@@ -80,3 +80,26 @@ def find_topic(query):
             return keyword
 
     return None
+
+
+def find_topics(query):
+    topic = re.sub(r"[^\w\s]", " ", query.lower())
+    topic = " ".join(topic.split())
+    found_topics = []
+
+    for alias in sorted(TOPIC_ALIASES, key=len, reverse=True):
+        normalized_alias = " ".join(alias.lower().split())
+
+        if f" {normalized_alias} " in f" {topic} ":
+            actual_topic = TOPIC_ALIASES[alias]
+
+            if actual_topic not in found_topics:
+                found_topics.append(actual_topic)
+
+    words = set(topic.split())
+
+    for keyword in KNOWLEDGE_BASE:
+        if keyword in words and keyword not in found_topics:
+            found_topics.append(keyword)
+
+    return found_topics
