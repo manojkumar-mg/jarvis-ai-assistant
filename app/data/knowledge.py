@@ -104,7 +104,6 @@ def find_topics(query):
 
     return found_topics
 
-
 def compare_topics(query, follow_up_type="simple"):
     topics = find_topics(query)
 
@@ -114,7 +113,12 @@ def compare_topics(query, follow_up_type="simple"):
     comparisons = []
 
     for topic in topics:
-        answer = KNOWLEDGE_BASE[topic].get(follow_up_type)
+        knowledge = KNOWLEDGE_BASE.get(topic)
+
+        if not knowledge:
+            continue
+
+        answer = knowledge.get(follow_up_type)
 
         if answer:
             comparisons.append(f"{topic.title()}: {answer}")
@@ -122,4 +126,21 @@ def compare_topics(query, follow_up_type="simple"):
     if len(comparisons) < 2:
         return None
 
-    return "\n\n".join(comparisons)
+    comparison_details = []
+
+    for detail in ("use", "benefits", "disadvantages", "how"):
+        detail_answers = []
+
+        for topic in topics:
+            knowledge = KNOWLEDGE_BASE.get(topic, {})
+            answer = knowledge.get(detail)
+
+            if answer:
+                detail_answers.append(f"{topic.title()}: {answer}")
+
+        if len(detail_answers) >= 2:
+            comparison_details.append(
+                f"{detail.title()}:\n" + "\n".join(detail_answers)
+            )
+
+    return "\n\n".join(comparisons + comparison_details)

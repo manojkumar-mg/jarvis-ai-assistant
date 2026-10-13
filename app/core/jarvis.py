@@ -422,7 +422,11 @@ class Jarvis:
             command_lower = command.lower()
 
             
-            if "compare" in command_lower:
+            if any(phrase in command_lower for phrase in (
+                    "compare",
+                    "difference between",
+                    "differences between"
+                )):
                 comparison = compare_topics(command)
 
                 if comparison:
