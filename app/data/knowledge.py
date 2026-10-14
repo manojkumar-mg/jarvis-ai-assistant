@@ -104,43 +104,51 @@ def find_topics(query):
 
     return found_topics
 
+
 def compare_topics(query, follow_up_type="simple"):
     topics = find_topics(query)
 
     if len(topics) < 2:
         return None
 
-    comparisons = []
+    labels = {
+        "simple": "Overview",
+        "use": "Main Use",
+        "benefits": "Advantages",
+        "disadvantages": "Limitations",
+        "how": "How It Works"
+    }
 
-    for topic in topics:
-        knowledge = KNOWLEDGE_BASE.get(topic)
+    rows = []
 
-        if not knowledge:
-            continue
-
-        answer = knowledge.get(follow_up_type)
-
-        if answer:
-            comparisons.append(f"{topic.title()}: {answer}")
-
-    if len(comparisons) < 2:
-        return None
-
-    comparison_details = []
-
-    for detail in ("use", "benefits", "disadvantages", "how"):
-        detail_answers = []
+    for detail, label in labels.items():
+        answers = []
 
         for topic in topics:
             knowledge = KNOWLEDGE_BASE.get(topic, {})
             answer = knowledge.get(detail)
 
             if answer:
-                detail_answers.append(f"{topic.title()}: {answer}")
+                answers.append(answer.replace("|", "\\|"))
+            else:
+                answers.append("Not available")
 
-        if len(detail_answers) >= 2:
-            comparison_details.append(
-                f"{detail.title()}:\n" + "\n".join(detail_answers)
-            )
+        if any(answer != "Not available" for answer in answers):
+            rows.append((label, answers))
 
-    return "\n\n".join(comparisons + comparison_details)
+    headers = [
+        topic.upper() if topic == "sql" else topic.title()
+        for topic in topics
+    ]
+
+    table = [
+        "| Feature | " + " | ".join(headers) + " |",
+        "|" + "---|" * (len(topics) + 1)
+    ]
+
+    for label, answers in rows:
+        table.append(
+            "| " + label + " | " + " | ".join(answers) + " |"
+        )
+
+    return "\n".join(table)
