@@ -158,7 +158,14 @@ intent_phrases = {
         "what does it do",
         "tell me more about it",
         "explain it further",
-        "continue"
+        "continue",
+        "which is easier",
+        "easier to learn",
+        "which is better for ai",
+        "better for ai",
+        "what about performance",
+        "performance"
+
 ],
     "recent_commands": [
         "last 3 commands",

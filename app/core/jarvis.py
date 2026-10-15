@@ -15,6 +15,7 @@ from app.data.knowledge import (
     KNOWLEDGE_BASE,
     TOPIC_ALIASES,
     find_topic,
+    find_topics,
     compare_topics
 )
 from app.voice.tts import speak
@@ -422,17 +423,68 @@ class Jarvis:
             command_lower = command.lower()
 
             
+            comparison_topics = self.context.get(
+                "last_comparison_topics", []
+            )
+
+            if comparison_topics and any(
+                phrase in command_lower
+                for phrase in (
+                    "which is easier",
+                    "easier to learn",
+                    "which is better for ai",
+                    "better for ai",
+                    "what about performance",
+                    "performance"
+                )
+            ):
+                if "easier" in command_lower:
+                    answer_key = "benefits"
+                    question = "ease of learning"
+                elif "ai" in command_lower:
+                    answer_key = "use"
+                    question = "AI suitability"
+                else:
+                    answer_key = "how"
+                    question = "performance"
+
+                answers = []
+
+                for topic in comparison_topics:
+                    answer = KNOWLEDGE_BASE.get(
+                        topic, {}
+                    ).get(answer_key)
+
+                    if answer:
+                        answers.append(
+                            f"{topic.title()}: {answer}"
+                        )
+
+                if answers:
+                    result = CommandResult(
+                        True,
+                        f"Regarding {question}:\n"
+                        + "\n".join(answers)
+                    )
+                    self.respond(result)
+                    return
+
+
+            
             if any(phrase in command_lower for phrase in (
                     "compare",
                     "difference between",
                     "differences between"
                 )):
+               
                 comparison = compare_topics(command)
 
                 if comparison:
+                    self.context["last_comparison_topics"] = find_topics(command)
                     result = CommandResult(True, comparison)
                     self.respond(result)
                     return
+
 
 
             if (
