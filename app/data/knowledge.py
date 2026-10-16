@@ -19,7 +19,14 @@ KNOWLEDGE_BASE = {
         "simple": "Python is a programming language that lets you give instructions to a computer using simple, readable code.",
         "benefits": "Python is easy to learn, has a large community, offers many libraries, and supports several areas of development.",
         "disadvantages": "Python can be slower than compiled languages, may use more memory, and is not always ideal for mobile applications.",
-        "how": "Python code is interpreted by the Python runtime, which executes your instructions to produce the required output."
+        "how": "Python code is interpreted by the Python runtime, which executes your instructions to produce the required output.",
+        
+        "comparison": {
+            "ease": "Python is generally easier for beginners because its syntax is readable and concise.",
+            "ai": "Python is widely used for AI and machine learning because of libraries such as PyTorch, TensorFlow, and scikit-learn.",
+            "performance": "Python is generally slower for CPU-intensive tasks than compiled languages, though optimized libraries can run operations efficiently."
+        }
+
     },
 
     "c": {
@@ -29,7 +36,14 @@ KNOWLEDGE_BASE = {
         "simple": "C is a programming language that gives you detailed control over how a computer works.",
         "benefits": "C is fast, efficient, portable, and provides direct memory access.",
         "disadvantages": "C requires careful memory management and does not provide some high-level features found in modern languages.",
-        "how": "C source code is compiled into machine code, which the computer can execute directly."
+        "how": "C source code is compiled into machine code, which the computer can execute directly.",
+        
+        "comparison": {
+            "ease": "C is often harder for beginners because it requires careful handling of pointers, memory, and low-level details.",
+            "ai": "C is useful for performance-critical AI components, but it is less commonly used than Python for everyday AI development.",
+            "performance": "C can deliver high performance and fine-grained memory control when code is implemented efficiently."
+        }
+
     },  
     
 "sql": {
@@ -39,7 +53,14 @@ KNOWLEDGE_BASE = {
     "simple": "SQL is a language that helps us store, find, and manage data in databases.",
     "benefits": "SQL makes data retrieval efficient, supports structured queries, and works with many database systems.",
     "disadvantages": "SQL databases can require careful schema design and may need additional strategies to scale across distributed systems.",
-    "how": "SQL statements are sent to a database system, which processes the query and returns results or performs the requested operation."
+    "how": "SQL statements are sent to a database system, which processes the query and returns results or performs the requested operation.",
+    
+    "comparison": {
+        "ease": "SQL is often approachable for beginners learning database queries, though advanced queries can be challenging.",
+        "ai": "SQL is useful for retrieving and preparing data for AI, but it is not a general-purpose machine learning language.",
+        "performance": "SQL performance depends heavily on query design, indexes, database configuration, and data size."
+    }
+
 },
 
 
@@ -50,7 +71,14 @@ KNOWLEDGE_BASE = {
         "simple": "Java is a programming language that lets you build applications using classes and objects.",
         "benefits": "Java is portable, object-oriented, secure, widely used, and has a large ecosystem.",
         "disadvantages": "Java can use more memory than some languages and may require more code for simple tasks.",
-        "how": "Java source code is compiled into bytecode, which runs on the Java Virtual Machine."
+        "how": "Java source code is compiled into bytecode, which runs on the Java Virtual Machine.",
+        
+        "comparison": {
+            "ease": "Java has more explicit syntax and requires understanding classes and types, which may make it harder for some beginners.",
+            "ai": "Java can be used for AI, but Python is more commonly chosen for experimentation and machine learning workflows.",
+            "performance": "Java often performs well for long-running applications because the JVM can optimize code at runtime."
+        }
+
     }
 
 }

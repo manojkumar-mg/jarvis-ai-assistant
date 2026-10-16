@@ -438,22 +438,24 @@ class Jarvis:
                     "performance"
                 )
             ):
+                
                 if "easier" in command_lower:
-                    answer_key = "benefits"
+                    comparison_key = "ease"
                     question = "ease of learning"
                 elif "ai" in command_lower:
-                    answer_key = "use"
+                    comparison_key = "ai"
                     question = "AI suitability"
                 else:
-                    answer_key = "how"
+                    comparison_key = "performance"
                     question = "performance"
+
 
                 answers = []
 
                 for topic in comparison_topics:
                     answer = KNOWLEDGE_BASE.get(
                         topic, {}
-                    ).get(answer_key)
+                    ).get("comparison", {}).get(comparison_key)
 
                     if answer:
                         answers.append(
