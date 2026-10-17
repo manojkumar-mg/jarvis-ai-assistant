@@ -56,7 +56,8 @@ class Jarvis:
         self.context = {
             "last_action": None,
             "last_website": None,
-            "last_search": None
+            "last_search": None,
+            "last_comparison_topics": []
         }
 
         if self.command_history:
