@@ -70,6 +70,8 @@ class Jarvis:
                 self.last_intent = item["intent"]
                 self.context["last_action"] = item["command"]
 
+
+
                 if item["intent"] == "open_website":
                     data = item.get("data")
 
@@ -857,6 +859,7 @@ class Jarvis:
             self.last_command = command
             self.last_intent = intent
             self.context["last_action"] = command
+            self.context["last_comparison_topics"] = []
 
             if intent == "search":
                 self.context["last_search"] = extract_search_query(command)
