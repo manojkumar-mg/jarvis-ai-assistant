@@ -430,6 +430,26 @@ class Jarvis:
                 "last_comparison_topics", []
             )
 
+            comparison_follow_up = any(
+                phrase in command_lower
+                for phrase in (
+                    "which is easier",
+                    "easier to learn",
+                    "which is better for ai",
+                    "better for ai",
+                    "what about performance",
+                    "performance"
+                )
+            )
+
+            if comparison_follow_up and not comparison_topics:
+                result = CommandResult(
+                    False,
+                    "I don't have an active comparison. Please compare two topics first."
+                )
+                self.respond(result)
+                return
+
             if comparison_topics and any(
                 phrase in command_lower
                 for phrase in (
@@ -595,6 +615,17 @@ class Jarvis:
                         False,
                         "I couldn't find your previous search."
                     )
+
+            elif (
+                self.last_intent not in ["search", "open_website"]
+                and follow_up_type == "general"
+            ):
+                result = CommandResult(
+                True,
+                "I don't have enough context to answer that follow-up. "
+                "Please ask a complete question."
+                )
+
             elif self.last_intent == "open_website":
                 website = self.context["last_website"]
 
