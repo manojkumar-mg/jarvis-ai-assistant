@@ -315,7 +315,24 @@ def detect_intent(command):
         if intent in matched_intents:
             return intent
 
+    knowledge_starters = (
+        "what is ",
+        "what are ",
+        "who is ",
+        "who are ",
+        "explain ",
+        "define ",
+        "how does ",
+        "how do ",
+        "why is ",
+        "why do ",
+    )
+
+    if command.startswith(knowledge_starters):
+        return "follow_up"
+
     return "unknown"
+
 
 
 def extract_website(command):

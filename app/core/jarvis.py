@@ -546,24 +546,32 @@ class Jarvis:
             elif "how does it work" in command_lower:
                 follow_up_type = "how"
 
+            elif command_lower.startswith((
+                "what is ",
+                "what are ",
+                "explain ",
+                "define "
+            )):
+                follow_up_type = "more"
+
             else:
                 follow_up_type = "general"
 
-            
             if self.last_intent == "search":
                 query = self.context.get("last_search")
+            else:
+                query = command
 
-                if query and follow_up_type != "general":
-                    local_answer = self.get_local_follow_up_answer(
-                        query,
-                        follow_up_type
-                    )
+            if query and follow_up_type != "general":
+                local_answer = self.get_local_follow_up_answer(
+                    query,
+                    follow_up_type
+                )
 
-                    if local_answer:
-                        result = CommandResult(True, local_answer)
-                        self.respond(result)
-                        return
-
+                if local_answer:
+                    result = CommandResult(True, local_answer)
+                    self.respond(result)
+                    return
 
             if not self.last_command:
                 result = CommandResult(
