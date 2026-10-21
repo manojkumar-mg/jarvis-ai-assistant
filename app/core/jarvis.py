@@ -57,7 +57,8 @@ class Jarvis:
             "last_action": None,
             "last_website": None,
             "last_search": None,
-            "last_comparison_topics": []
+            "last_comparison_topics": [],
+            "last_knowledge_topic": None
         }
 
         if self.command_history:
@@ -559,12 +560,17 @@ class Jarvis:
 
             if self.last_intent == "search":
                 query = self.context.get("last_search")
+                topic = find_topic(query) if query else None
             else:
-                query = command
+                topic = find_topic(command)
 
-            if query and follow_up_type != "general":
-                local_answer = self.get_local_follow_up_answer(
-                    query,
+            if topic:
+                self.context["last_knowledge_topic"] = topic
+            elif follow_up_type != "general":
+                topic = self.context.get("last_knowledge_topic")
+
+            if topic and follow_up_type != "general":
+                local_answer = KNOWLEDGE_BASE.get(topic, {}).get(
                     follow_up_type
                 )
 
@@ -572,6 +578,7 @@ class Jarvis:
                     result = CommandResult(True, local_answer)
                     self.respond(result)
                     return
+
 
             if not self.last_command:
                 result = CommandResult(
