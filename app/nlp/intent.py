@@ -164,7 +164,12 @@ intent_phrases = {
         "which is better for ai",
         "better for ai",
         "what about performance",
-        "performance"
+        "performance",
+        "give me another example",
+        "show me another example",
+        "what about its use",
+        "what about their use",
+        "what about python"
 
 ],
     "recent_commands": [

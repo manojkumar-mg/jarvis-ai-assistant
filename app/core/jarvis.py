@@ -521,6 +521,8 @@ class Jarvis:
 
             elif (
                 "what is its use" in command_lower
+                or "what about its use" in command_lower
+                or "what about their use" in command_lower
                 or "what does it do" in command_lower
                 or "why is it useful" in command_lower
             ):
@@ -529,8 +531,11 @@ class Jarvis:
             elif (
                 "give me an example" in command_lower
                 or "show me an example" in command_lower
+                or "give me another example" in command_lower
+                or "show me another example" in command_lower
             ):
                 follow_up_type = "example"
+
 
             elif (
                 "explain in simple words" in command_lower
@@ -634,12 +639,28 @@ class Jarvis:
             elif (
                 self.last_intent not in ["search", "open_website"]
                 and follow_up_type == "general"
+                and find_topic(command) is not None
+            ):
+                topic = find_topic(command)
+                self.context["last_knowledge_topic"] = topic
+                result = CommandResult(
+                    True,
+                    KNOWLEDGE_BASE.get(topic, {}).get(
+                        "more",
+                        f"You're asking about {topic.title()}. What would you like to know about it?"
+                    )
+                )
+
+            elif (
+                self.last_intent not in ["search", "open_website"]
+                and follow_up_type == "general"
             ):
                 result = CommandResult(
-                True,
-                "I don't have enough context to answer that follow-up. "
-                "Please ask a complete question."
+                    True,
+                    "I don't have enough context to answer that follow-up. "
+                    "Please ask a complete question."
                 )
+
 
             elif self.last_intent == "open_website":
                 website = self.context["last_website"]
