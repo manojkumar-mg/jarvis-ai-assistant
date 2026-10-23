@@ -58,6 +58,7 @@ class Jarvis:
             "last_website": None,
             "last_search": None,
             "last_comparison_topics": [],
+            "last_comparison_winner": None,
             "last_knowledge_topic": None
         }
 
@@ -430,6 +431,36 @@ class Jarvis:
             comparison_topics = self.context.get(
                 "last_comparison_topics", []
             )
+            easier_reference = any(
+                phrase in command_lower
+                for phrase in (
+                    "the easier one",
+                    "the easier language",
+                    "the easier option"
+                )
+            )
+
+            if easier_reference:
+                winner = self.context.get("last_comparison_winner")
+
+                if winner:
+                    result = CommandResult(
+                        True,
+                        f"{winner.title()} is the easier option based on our previous comparison. "
+                        + KNOWLEDGE_BASE.get(winner, {}).get(
+                            "example",
+                            ""
+                        )
+                    )
+                else:
+                    result = CommandResult(
+                        False,
+                        "Please compare two topics and ask which is easier first."
+                    )
+
+                self.respond(result)
+                return
+
 
             comparison_follow_up = any(
                 phrase in command_lower
@@ -462,18 +493,36 @@ class Jarvis:
                     "performance"
                 )
             ):
-                
                 if "easier" in command_lower:
                     comparison_key = "ease"
                     question = "ease of learning"
+
+                    easier_pairs = {
+                        frozenset(("python", "java")): "python",
+                        frozenset(("c", "python")): "python",
+                    }
+
+                    self.context["last_comparison_winner"] = (
+                        easier_pairs.get(frozenset(comparison_topics))
+                    )
+                    if self.context["last_comparison_winner"] is None:
+                        result = CommandResult(
+                            True,
+                            "I don't have a defined easier option for this pair yet. "
+                            "I can compare the available descriptions, but I won't guess a winner."
+                        )
+                        self.respond(result)
+                        return
+
                 elif "ai" in command_lower:
                     comparison_key = "ai"
                     question = "AI suitability"
+                    self.context["last_comparison_winner"] = None
+
                 else:
                     comparison_key = "performance"
                     question = "performance"
-
-
+                    self.context["last_comparison_winner"] = None
                 answers = []
 
                 for topic in comparison_topics:
@@ -504,6 +553,7 @@ class Jarvis:
                 )):
                
                 comparison = compare_topics(command)
+                self.context["last_comparison_winner"] = None
 
                 if comparison:
                     self.context["last_comparison_topics"] = find_topics(command)
