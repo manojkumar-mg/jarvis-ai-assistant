@@ -58,6 +58,7 @@ class Jarvis:
             "last_website": None,
             "last_search": None,
             "last_comparison_topics": [],
+            "last_example_index": {},
             "last_comparison_winner": None,
             "last_knowledge_topic": None
         }
@@ -623,16 +624,36 @@ class Jarvis:
                 self.context["last_knowledge_topic"] = topic
             elif follow_up_type != "general":
                 topic = self.context.get("last_knowledge_topic")
-
             if topic and follow_up_type != "general":
-                local_answer = KNOWLEDGE_BASE.get(topic, {}).get(
-                    follow_up_type
-                )
+                topic_knowledge = KNOWLEDGE_BASE.get(topic, {})
+                local_answer = topic_knowledge.get(follow_up_type)
 
-                if local_answer:
-                    result = CommandResult(True, local_answer)
-                    self.respond(result)
-                    return
+                if follow_up_type == "example":
+                    examples = topic_knowledge.get("examples", [])
+
+                    if examples:
+                        example_indexes = self.context.setdefault(
+                            "last_example_index", {}
+                        )
+
+                        if command_lower.startswith((
+                            "give me another example",
+                            "show me another example"
+                        )):
+                            next_index = (
+                            example_indexes.get(topic, 0) + 1
+                            ) % len(examples)
+                        else:
+                            next_index = 0
+
+                        example_indexes[topic] = next_index
+                        local_answer = examples[next_index]
+
+            if local_answer:
+                result = CommandResult(True, local_answer)
+                self.respond(result)
+                return
+
 
 
             if not self.last_command:
