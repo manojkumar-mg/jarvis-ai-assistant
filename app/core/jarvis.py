@@ -587,18 +587,34 @@ class Jarvis:
             ):
                 follow_up_type = "example"
 
-
-            elif (
-                "explain in simple words" in command_lower
-                or "make it simpler" in command_lower
-            ):
+            elif any(phrase in command_lower for phrase in (
+                "explain in simple words",
+                "explain that simply",
+                "explain it simply",
+                "make it simpler",
+                "put it simply",
+                "in simple words",
+            )):
                 follow_up_type = "simple"
 
-            elif "what are the benefits" in command_lower:
+            elif any(phrase in command_lower for phrase in (
+                "what are the benefits",
+                "what are its benefits",
+                "what are the advantages",
+                "what are its advantages",
+                "tell me its advantages",
+                "tell me the advantages",
+            )):
                 follow_up_type = "benefits"
 
-            elif "what are the disadvantages" in command_lower:
+            elif any(phrase in command_lower for phrase in (
+                "what are the disadvantages",
+                "what are its disadvantages",
+                "what are the drawbacks",
+                "what are its drawbacks",
+            )):
                 follow_up_type = "disadvantages"
+
 
             elif "how does it work" in command_lower:
                 follow_up_type = "how"
