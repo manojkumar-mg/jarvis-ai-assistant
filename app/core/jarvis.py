@@ -576,6 +576,7 @@ class Jarvis:
                 or "what about their use" in command_lower
                 or "what does it do" in command_lower
                 or "why is it useful" in command_lower
+                or "why is that useful" in command_lower
             ):
                 follow_up_type = "use"
 
@@ -640,6 +641,7 @@ class Jarvis:
                 self.context["last_knowledge_topic"] = topic
             elif follow_up_type != "general":
                 topic = self.context.get("last_knowledge_topic")
+            local_answer = None
             if topic and follow_up_type != "general":
                 topic_knowledge = KNOWLEDGE_BASE.get(topic, {})
                 local_answer = topic_knowledge.get(follow_up_type)
