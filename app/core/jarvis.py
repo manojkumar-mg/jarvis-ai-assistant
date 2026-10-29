@@ -545,25 +545,54 @@ class Jarvis:
                     self.respond(result)
                     return
 
-
-            
             if any(phrase in command_lower for phrase in (
                     "compare",
                     "difference between",
                     "differences between"
                 )):
-               
-                comparison = compare_topics(command)
+
+                comparison_query = command
+                mentioned_topics = find_topics(command)
+
+                if (
+                    len(mentioned_topics) == 1
+                    and any(
+                        phrase in command_lower
+                        for phrase in (
+                            "compare it with",
+                            "compare it to",
+                            "compare that with",
+                            "compare that to",
+                            "compare this with",
+                            "compare this to",
+                            "difference between it and",
+                            "difference between that and",
+                            "differences between it and",
+                            "differences between that and"
+                        )
+                    )
+                ):
+                    previous_topic = self.context.get(
+                        "last_knowledge_topic"
+                    )
+
+                    if (
+                        previous_topic
+                        and previous_topic not in mentioned_topics
+                    ):
+                        comparison_query = (
+                            previous_topic + " " + command
+                        )
+                comparison = compare_topics(comparison_query)
                 self.context["last_comparison_winner"] = None
 
                 if comparison:
-                    self.context["last_comparison_topics"] = find_topics(command)
+                    self.context["last_comparison_topics"] = find_topics(
+                        comparison_query
+                    )
                     result = CommandResult(True, comparison)
                     self.respond(result)
                     return
-
-
-
             if (
                 "tell me more" in command_lower
                 or "explain it further" in command_lower
