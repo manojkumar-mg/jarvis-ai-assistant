@@ -126,27 +126,40 @@ def find_topic(query):
     return None
 
 
+
 def find_topics(query):
     topic = re.sub(r"[^\w\s]", " ", query.lower())
     topic = " ".join(topic.split())
     found_topics = []
 
-    for alias in sorted(TOPIC_ALIASES, key=len, reverse=True):
+    matches = []
+
+    for alias in TOPIC_ALIASES:
         normalized_alias = " ".join(alias.lower().split())
 
-        if f" {normalized_alias} " in f" {topic} ":
-            actual_topic = TOPIC_ALIASES[alias]
+        pattern = r"\b" + re.escape(normalized_alias) + r"\b"
 
-            if actual_topic not in found_topics:
-                found_topics.append(actual_topic)
-
-    words = set(topic.split())
+        for match in re.finditer(pattern, topic):
+            matches.append(
+                (match.start(), match.end(), TOPIC_ALIASES[alias])
+            )
 
     for keyword in KNOWLEDGE_BASE:
-        if keyword in words and keyword not in found_topics:
-            found_topics.append(keyword)
+        pattern = r"\b" + re.escape(keyword) + r"\b"
+
+        for match in re.finditer(pattern, topic):
+            matches.append(
+                (match.start(), match.end(), keyword)
+            )
+
+    matches.sort(key=lambda item: (item[0], -(item[1] - item[0])))
+
+    for _, _, actual_topic in matches:
+        if actual_topic not in found_topics:
+            found_topics.append(actual_topic)
 
     return found_topics
+
 
 
 def compare_topics(query, follow_up_type="simple"):
